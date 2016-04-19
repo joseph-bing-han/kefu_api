@@ -28,6 +28,7 @@ class AccessToken(object):
             "expires":expires,
             "token_type":self.token_type,
             "user_id":self.user_id,
+            "store_id":self.store_id
         }
         pipe.hmset(key, m)
         if expires:
@@ -74,6 +75,7 @@ class RefreshToken(object):
         m = {
             "token_type":self.token_type,
             "user_id":self.user_id,
+            "store_id":self.store_id
         }
         pipe.hmset(key, m)
         pipe.execute()
