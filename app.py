@@ -18,7 +18,7 @@ import config
 app = Flask(__name__)
 app.debug = config.DEBUG
 
-rds = redis.StrictRedis(host=config.REDIS_HOST, port=config.REDIS_PORT, db=config.REDIS_DB)
+rds = redis.StrictRedis(host=config.REDIS_HOST, port=config.REDIS_PORT, db=config.REDIS_DB, password=config.REDIS_PASSWORD)
 
 def SERVER_INTERNAL_ERROR():
     e = {"error":"Server Internal Error!"}
