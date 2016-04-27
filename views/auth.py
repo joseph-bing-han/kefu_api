@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from flask import request, Blueprint, g
+from flask import request, Blueprint, g, session, render_template_string
 import random
 import json
 import time
@@ -12,14 +12,13 @@ from datetime import datetime
 from functools import wraps
 
 from libs.util import make_response
-
+from gobelieve import login_gobelieve
 from models import user
 from models import token
 from models.seller import Seller
 import config
 
 app = Blueprint('auth', __name__)
-
 
 def INVALID_PARAM():
     e = {"error":"非法输入"}
@@ -42,7 +41,6 @@ def CAN_NOT_GET_TOKEN():
     e = {"error":"获取imsdk token失败"}
     logging.warn("获取imsdk token失败")
     return make_response(400, e)
-
     
 @app.route("/auth/token", methods=["POST"])
 def access_token():
@@ -135,25 +133,6 @@ def refresh_token():
     return make_response(200, tok)
 
 
-
-def login_gobelieve(uid, uname, appid, appsecret):
-    url = config.GOBELIEVE_URL + "/auth/grant"
-    obj = {"uid":uid, "user_name":uname}
-
-    m = md5.new(appsecret)
-    secret = m.hexdigest()
-    basic = base64.b64encode(str(appid) + ":" + secret)
-
-    headers = {'Content-Type': 'application/json; charset=UTF-8',
-               'Authorization': 'Basic ' + basic}
-     
-    res = requests.post(url, data=json.dumps(obj), headers=headers)
-    if res.status_code != 200:
-        logging.warning("login error:%s %s", res.status_code, res.text)
-        return None
-
-    obj = json.loads(res.text)
-    return obj["data"]["token"]
 
 
 

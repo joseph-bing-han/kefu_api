@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>
+            狗不理客服
+        </title>
+        <link rel="stylesheet" href="/static/css/style.css" type="text/css" />
+        <script>
+          function validateForm() {
+              return true;
+           }
+        </script>
+    </head>
+    <body>
+        <form name="myForm" action="login" method="post" onsubmit="return validateForm()">
+          <tr>
+              <td>
+                  <label>客服号:</label>
+                  <input name="username" type="text" />
+              </td>
+          </tr>
+          <tr>
+              <td>
+                  <label>密码:</label>
+                  <input name="password" type="password" />
+              </td>
+          </tr>
+          <tr>
+              <td>
+                  <input id="login" type='submit' value="登录" />
+              </td>
+          </tr>
+        </form>
+    </body>
+</html>
