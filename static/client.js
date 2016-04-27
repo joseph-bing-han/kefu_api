@@ -56,7 +56,7 @@ var observer = {
             msg.customerID == customerID) {
             addMessage(msg);
         } else {
-            process.msgTip(cid);
+            process.msgTip(msg.customerAppID, msg.customerID);
         }
     },
     handleCustomerSupportMessage: function(msg) {

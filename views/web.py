@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 from flask import request, Blueprint, g, session, redirect
 from flask import render_template_string, render_template
-import md5
 import flask
+import md5
+import json
+import base64
+import logging
 from models.seller import Seller
 
 from gobelieve import login_gobelieve
@@ -26,8 +29,11 @@ error_html = """<!DOCTYPE html>
 
 @app.route('/')
 def index():
-    if request.cookies.get('token'):
-        return render_template('chat.html', host=config.HOST)
+    if request.cookies.get('token') and request.cookies.get('uid'):
+        uid = request.cookies.get('uid')
+        uid = int(uid)
+        seller = Seller.get_seller(g._db, uid)
+        return render_template('chat.html', host=config.HOST, name=seller['name'])
     else:
         return render_template('index.html')
 
@@ -72,7 +78,6 @@ def login():
     response = flask.make_response(redirect('/'))
 
     response.set_cookie('token', access_token)
-    response.set_cookie('name', seller['name'])
     response.set_cookie('store_id', str(seller['store_id']))
     response.set_cookie('uid', str(seller['id']))
     return response

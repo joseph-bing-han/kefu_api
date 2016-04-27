@@ -40,8 +40,10 @@ var htmlLoyout = {
     buildUser: function (user) {
         var html = [];
         var s;
+        var cid = "" + user.appid + ":" + user.uid;
 
-        s = String.format('<li data-uid="{0}" data-appid="{1}">', user.uid, user.appid);
+        s = String.format('<li data-uid="{0}" data-appid="{1}" data-id="{2}">',
+                          user.uid, user.appid,  cid);
         html.push(s);
         if (user.avatar) {
             html.push('    <img src="' + helper.getUserAvatar(user) + '" class="avatar" alt=""/>');
@@ -131,8 +133,9 @@ var process = {
     appendImage: function (m) {
         node.chatHistory.append(htmlLoyout.buildImage(m));
     },
-    msgTip: function (uid) {
-        var userDom = node.usersList.find('li[data-uid="' + uid + '"]'),
+    msgTip: function (appid, uid) {
+        var cid = "" + appid + ":" + uid;
+        var userDom = node.usersList.find('li[data-id="' + cid + '"]'),
             num = '';
         if (userDom) {
             num = userDom.find('.num').text();
@@ -227,15 +230,13 @@ function showChat() {
 $(document).ready(function () {
     var token = util.getCookie("token");
     var uid = util.getCookie("uid");
-    var name = util.getCookie("name");
     var storeID = util.getCookie("store_id");
     storeID = parseInt(storeID);
 
     console.log("token:", token);
-    console.log("name:", name);
     console.log("uid:", uid);
     console.log("storeID", storeID);
-
+    console.log("name:", name);
 
     loginUser.name = name;
     loginUser.uid = uid;
@@ -248,7 +249,9 @@ $(document).ready(function () {
     }
     im.start();
 
-    setName(loginUser.name);
+    if (loginUser.name) {
+        setName(loginUser.name);
+    }
     showChat();
 
     node.exit.on('click', function () {
