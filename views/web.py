@@ -27,7 +27,7 @@ error_html = """<!DOCTYPE html>
 @app.route('/')
 def index():
     if request.cookies.get('token'):
-        return render_template('chat.html')
+        return render_template('chat.html', host=config.HOST)
     else:
         return render_template('index.html')
 

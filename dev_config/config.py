@@ -25,4 +25,5 @@ APP_ID = 1453
 APP_KEY = "xQrfaJPgfc5DsWuNUKcn4DMSWJUR4fcr"
 APP_SECRET = 'ozj9rROFg3GmiqSa8kRBagNubf52BHlz'
 
-
+#im host
+HOST="192.168.3.36"

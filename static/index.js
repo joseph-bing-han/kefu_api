@@ -243,7 +243,9 @@ $(document).ready(function () {
     loginUser.storeID = storeID;
 
     im.accessToken = loginUser.accessToken;
-    im.host = "192.168.3.36";
+    if (host) {
+        im.host = host;
+    }
     im.start();
 
     setName(loginUser.name);
