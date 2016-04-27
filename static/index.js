@@ -257,7 +257,6 @@ $(document).ready(function () {
     node.exit.on('click', function () {
         document.cookie = 'token=';
         document.cookie = 'uid=';
-        document.cookie = 'name=';
         document.cookie = 'store_id=';
         location.reload();
     });
