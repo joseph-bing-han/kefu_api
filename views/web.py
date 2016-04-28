@@ -7,6 +7,7 @@ import json
 import base64
 import logging
 from models.seller import Seller
+from models.store import Store
 
 from gobelieve import login_gobelieve
 import config
@@ -92,9 +93,14 @@ def chat():
     if not store:
         return render_template_string(error_html, error="未指定商店id")
     
-
+    s = Store.get_store(g._db, int(store))
+    if s:
+        name = s['name']
+    else:
+        name = ""
+    
     if uid and appid and token:
-        return render_template("customer_chat.html", host=config.HOST, customerAppID=int(appid), customerID=int(uid), customerToken=token)
+        return render_template("customer_chat.html", host=config.HOST, customerAppID=int(appid), customerID=int(uid), customerToken=token, name=name)
 
     #生成临时用户
     rds = g.rds
@@ -102,4 +108,4 @@ def chat():
     uid = rds.incr(key)
     appid = config.ANONYMOUS_APP_ID
     token = login_gobelieve(uid, "", config.ANONYMOUS_APP_ID, config.ANONYMOUS_APP_SECRET)
-    return render_template("customer_chat.html", host=config.HOST, customerAppID=appid, customerID=uid, customerToken=token)
+    return render_template("customer_chat.html", host=config.HOST, customerAppID=appid, customerID=uid, customerToken=token, name=name)
