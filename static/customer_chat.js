@@ -1,17 +1,17 @@
-var msgLocalID=0;
+var msgLocalID = 0;
 
 var sellerID = 0;
 var storeID = 0;
 var appID = 0;
 var uid = 0;
 
-String.format = function() {
-    if( arguments.length == 0 )
+String.format = function () {
+    if (arguments.length == 0)
         return null;
 
-    var str = arguments[0]; 
-    for(var i=1;i<arguments.length;i++) {
-        var re = new RegExp('\\{' + (i-1) + '\\}','gm');
+    var str = arguments[0];
+    for (var i = 1; i < arguments.length; i++) {
+        var re = new RegExp('\\{' + (i - 1) + '\\}', 'gm');
         str = str.replace(re, arguments[i]);
     }
     return str;
@@ -29,7 +29,7 @@ var helper = {
         if (user.name) {
             return user.name;
         } else {
-            return "匿名("+user.uid+")";
+            return "匿名(" + user.uid + ")";
         }
     },
     getUserAvatar: function (user) {
@@ -86,7 +86,7 @@ var htmlLoyout = {
         html.push('     <div class="bubble">');
         html.push('       <p class="pre"><audio  controls="controls" src="' + audio_url + '"></audio></p>');
         html.push('       <span class="time">' + helper.toTime(msg.timestamp * 1000) + '</span>');
-   
+
         if (msg.ack) {
             html.push('   <span class="ack"></span>');
         }
@@ -162,7 +162,7 @@ function addMessage(msg) {
 }
 
 observer = {
-    handleCustomerMessage: function(msg) {
+    handleCustomerMessage: function (msg) {
         if (msg.customerID != uid || msg.customerAppID != appID) {
             return;
         }
@@ -178,7 +178,7 @@ observer = {
         msg.msgLocalID = msgLocalID++;
         addMessage(msg);
     },
-    handleCustomerSupportMessage: function(msg) {
+    handleCustomerSupportMessage: function (msg) {
         if (msg.customerID != uid || msg.customerAppID != appID) {
             return;
         }
@@ -194,16 +194,16 @@ observer = {
         msg.msgLocalID = msgLocalID++;
         addMessage(msg)
     },
-    handleCustomerMessageACK: function(msg) {
+    handleCustomerMessageACK: function (msg) {
         console.log("handleCustomerMessageACK...");
         var msgLocalID = msg.msgLocalID;
         process.msgACK(msgLocalID);
     },
-    handleCustomerMessageFailure: function(msg) {
+    handleCustomerMessageFailure: function (msg) {
         console.log("handleCustomerMessageFailure...");
     },
 
-    onConnectState: function(state) {
+    onConnectState: function (state) {
         if (state == IMService.STATE_CONNECTED) {
             console.log("im connected");
         } else if (state == IMService.STATE_CONNECTING) {
@@ -238,7 +238,7 @@ $(document).ready(function () {
     } else if (customerAppID) {
         appID = customerAppID;
     }
-    
+
     var token = "";
     r = util.getURLParameter('token', location.search);
     if (r) {
@@ -251,7 +251,7 @@ $(document).ready(function () {
     console.log("store id:", storeID);
     console.log("token:" + token);
 
-    
+
     if (!token || !appID || !uid || !storeID) {
         return;
     }
@@ -264,19 +264,21 @@ $(document).ready(function () {
 
     $("#entry").keypress(function (e) {
         if (e.keyCode != 13) return;
+        e.stopPropagation();
+        e.preventDefault();
         var msg = $("#entry").val().replace("\n", "");
         if (!util.isBlank(msg)) {
             var now = new Date();
             var obj = {"text": msg};
             var textMsg = JSON.stringify(obj);
             var message = {
-                customerID:uid, 
-                customerAppID:appID, 
-                storeID:storeID,
-                sellerID:sellerID, 
-                content: textMsg, 
+                customerID: uid,
+                customerAppID: appID,
+                storeID: storeID,
+                sellerID: sellerID,
+                content: textMsg,
                 contentObj: obj,
-                msgLocalID:msgLocalID++
+                msgLocalID: msgLocalID++
             };
             message.outgoing = true;
             message.timestamp = (now.getTime() / 1000);
