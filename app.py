@@ -11,6 +11,7 @@ import os
 import redis
 
 from views import auth
+from views import customer
 from libs.mysql import Mysql
 from libs.util import make_response
 import config
@@ -19,6 +20,9 @@ app = Flask(__name__)
 app.debug = config.DEBUG
 
 rds = redis.StrictRedis(host=config.REDIS_HOST, port=config.REDIS_PORT, db=config.REDIS_DB, password=config.REDIS_PASSWORD)
+
+imrds = redis.StrictRedis(host=config.IM_REDIS_HOST, port=config.IM_REDIS_PORT, db=config.IM_REDIS_DB, password=config.IM_REDIS_PASSWORD)
+
 
 def SERVER_INTERNAL_ERROR():
     e = {"error":"Server Internal Error!"}
@@ -33,6 +37,7 @@ def generic_error_handler(err):
 def before_request():
     logging.debug("before request")
     g.rds = rds
+    g.imrds = rds
 
     cnf = config.MYSQL
     g._db = Mysql(*cnf)
@@ -55,6 +60,7 @@ def init_app(app):
     app.register_error_handler(Exception, generic_error_handler)
 
     app.register_blueprint(auth.app)
+    app.register_blueprint(customer.app)
     if config.ENABLE_ROBOT:
         from views import robot
         app.register_blueprint(robot.app)

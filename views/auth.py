@@ -81,11 +81,6 @@ def access_token():
     if not access_token:
         return CAN_NOT_GET_TOKEN()
 
-    u0 = user.get_user(g.rds, uid)
-    u = user.User()
-    u.uid = uid
-    user.save_user(g.rds, u)
-
     tok = create_token(3600, True)
     tok['uid'] = uid
     tok['store_id'] = store_id
