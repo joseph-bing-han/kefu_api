@@ -16,12 +16,12 @@ app = Blueprint('web', __name__)
 error_html = """<!DOCTYPE html>
 <html>
 <head>
-<title>Chat Demo</title>
+<title>客服</title>
 </head>
 <body>
 
 
-<p>error.</p>
+<p>{{error}}</p>
 
 </body>
 </html>"""
@@ -82,3 +82,24 @@ def login():
     response.set_cookie('uid', str(seller['id']))
     return response
 
+@app.route("/chat/pc/index.html")
+def chat():
+    store = request.args.get('store')
+    uid = request.args.get('uid')
+    appid = request.args.get('appid')
+    token = request.args.get('token')
+
+    if not store:
+        return render_template_string(error_html, error="未指定商店id")
+    
+
+    if uid and appid and token:
+        return render_template("customer_chat.html", host=config.HOST, customerAppID=int(appid), customerID=int(uid), customerToken=token)
+
+    #生成临时用户
+    rds = g.rds
+    key = "anonymous_id"
+    uid = rds.incr(key)
+    appid = config.ANONYMOUS_APP_ID
+    token = login_gobelieve(uid, "", config.ANONYMOUS_APP_ID, config.ANONYMOUS_APP_SECRET)
+    return render_template("customer_chat.html", host=config.HOST, customerAppID=appid, customerID=uid, customerToken=token)

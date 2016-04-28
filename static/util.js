@@ -29,6 +29,13 @@ util = {
         return (text.match(blank) !== null);
     },
 
+    getURLParameter: function(name, search) {
+        search = search || location.search
+        var param = search.match(
+            RegExp(name + '=' + '(.+?)(&|$)'))
+        return param ? decodeURIComponent(param[1]) : null
+    },
+
     setCookie:function (c_name,value,expires) {
         var exdate=new Date()
         if (expires) {
