@@ -2,6 +2,7 @@
 from flask import request, Blueprint, g
 import json
 import logging
+from libs.util import make_response
 from authorization import require_auth
 
 app = Blueprint('customer', __name__)
@@ -17,7 +18,7 @@ class Customer(object):
 def get_customer(appid, customer_id):
     rds = g.imrds
     name = Customer.get_customer_name(rds, appid, customer_id)
-    if name is None:
+    if not name:
         name = ""
     obj = {
         "appid":appid,
@@ -25,4 +26,4 @@ def get_customer(appid, customer_id):
         "name":name
     }
 
-    return json.dumps(obj)
+    return make_response(200, obj)

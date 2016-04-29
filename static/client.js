@@ -47,6 +47,24 @@ var observer = {
             user = {uid:msg.customerID, appid:msg.customerAppID}
             userDB.addUser(user);
             addUser(user);
+
+            var url =  "customers/" + msg.customerAppID + "/" + msg.customerID;
+            $.ajax({
+                url: url,
+                dataType: 'json',
+                success: function (result, status, xhr) {
+                    console.log("customer:", result);
+                    if (result['name']) {
+                        user.name = result['name'];
+                        setUserName(msg.customerAppID, msg.customerID, 
+                                    user.name);
+                    }
+                },
+                error: function (xhr, err) {
+                    console.log("get customer name err:", err, xhr.status);
+                }
+            });
+
         }
 
         var cid = "" + msg.customerAppID + ":" + msg.customerID;

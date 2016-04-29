@@ -28,6 +28,9 @@ def require_auth(f):
     """Protect resource with specified scopes."""
     @wraps(f)
     def wrapper(*args, **kwargs):
+        if request.cookies.get('token'):
+            return f(*args, **kwargs)
+
         if 'Authorization' in request.headers:
             tok = request.headers.get('Authorization')[7:]
         else:

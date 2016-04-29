@@ -71,7 +71,10 @@ def login():
     if not uid:
         return render_template_string(error_html, error="非法的用户名/密码")
 
-    access_token = login_gobelieve(uid, "", config.APP_ID, config.APP_SECRET)
+    name = seller.get('name')
+    if not name:
+        name = ""
+    access_token = login_gobelieve(uid, name, config.APP_ID, config.APP_SECRET)
         
     if not access_token:
         return render_template_string(error_html, error="登录失败")

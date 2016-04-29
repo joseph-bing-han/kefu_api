@@ -11,6 +11,7 @@ import os
 import redis
 
 from views import web
+from views import customer
 from libs.mysql import Mysql
 from libs.util import make_response
 import config
@@ -33,6 +34,7 @@ def generic_error_handler(err):
 def before_request():
     logging.debug("before request")
     g.rds = rds
+    g.imrds = rds
 
     cnf = config.MYSQL
     g._db = Mysql(*cnf)
@@ -55,6 +57,7 @@ def init_app(app):
     app.register_error_handler(Exception, generic_error_handler)
 
     app.register_blueprint(web.app)
+    app.register_blueprint(customer.app)
 
 
 def init_logger(logger):

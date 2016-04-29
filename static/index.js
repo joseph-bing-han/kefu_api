@@ -217,6 +217,13 @@ function addUser(user) {
     node.usersList.prepend(htmlLoyout.buildUser(user));
 }
 
+function setUserName(appid, uid, name) {
+    var cid = "" + appid + ":" + uid;
+    var userDom = node.usersList.find('li[data-id="' + cid + '"]');
+    if (userDom) {
+        userDom.find('.name').text(name);
+    }
+}
 
 function setName(username) {
     $("#name").text(username);
