@@ -6,7 +6,12 @@ import flask
 import md5
 import json
 import logging
+
 import sys
+#UnicodeDecodeError when render template
+reload(sys)
+sys.setdefaultencoding("utf-8")
+
 import os
 import redis
 
@@ -74,6 +79,7 @@ log = logging.getLogger('')
 init_logger(log)
 
 init_app(app)
+
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=60002)
