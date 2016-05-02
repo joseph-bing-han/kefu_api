@@ -33,7 +33,7 @@ var helper = {
         } else {
             return '';
         }
-    },
+    }
 };
 
 var htmlLoyout = {
@@ -113,7 +113,7 @@ var htmlLoyout = {
     },
     buildACK: function () {
         return '<span class="ack"></span>';
-    },
+    }
 };
 var node = {
     chatHistory: $("#chatHistory ul"),
@@ -152,7 +152,7 @@ var process = {
     },
     msgACK: function (msgID) {
         node.chatHistory.find('li[data-id="' + msgID + '"] .bubble').append(htmlLoyout.buildACK());
-    },
+    }
 };
 
 function scrollDown() {
