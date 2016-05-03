@@ -1,6 +1,12 @@
+html {
+  height: 100%;
+  width: 100%; }
+
 body {
   background-color: #ddd;
-  font-size: 1em; }
+  font-size: 1em;
+  height: 100%;
+  width: 100%; }
   body ::-webkit-scrollbar-thumb {
     background-color: rgba(0, 0, 0, 0.2); }
   body ::-webkit-scrollbar-track {
@@ -35,6 +41,8 @@ ul, ol, li {
 
 .app {
   box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.06), 0 2px 5px 0 rgba(0, 0, 0, 0.2);
+  /*ie*/
+  height: 100%;
   height: calc(100% - 38px);
   position: relative;
   margin: 0 auto;
@@ -322,7 +330,8 @@ ul, ol, li {
   -moz-transition: all .2s ease-in-out;
   -o-transition: all .2s ease-in-out;
   transition: all .2s ease-in-out;
-  width: 0;
+  width: 24px;
+  height: 24px;
   white-space: nowrap;
   overflow: hidden; }
   .profile .exit:hover {
