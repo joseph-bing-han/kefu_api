@@ -16,8 +16,8 @@ URL = "http://dev.api.kefu.gobelieve.io:60001"
 #URL = "http://api.kefu.gobelieve.io"
 
 url = URL + "/auth/token"
-#values = {"username":"100060", "password":"111111"}
-values = {"username":"100061", "password":"111111"}
+values = {"username":"100060", "password":"111111"}
+#values = {"username":"100061", "password":"111111"}
 data = json.dumps(values)
 r = requests.post(url, data=data)
 print r.content
@@ -45,12 +45,10 @@ access_token = resp["access_token"]
 refresh_token = resp["refresh_token"]
 
 
-
-#params = {"question":"樱桃营养成分都有哪些呢？听说樱桃富含叶酸，是这样吗？是不是特别适合孕妇吃呢"}
-#url = URL + "/robot/answer"
-#r = requests.get(url, params=params)
-#print r.content
-
+params = {"question":"地球与火星之间的距离"}
+url = URL + "/robot/answer"
+r = requests.get(url, params=params, headers = headers)
+print r.content
 
 url = URL + "/customers/%s/%s"%(7, 1)
 r = requests.get(url, headers=headers)

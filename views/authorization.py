@@ -29,6 +29,11 @@ def require_auth(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
         if request.cookies.get('token'):
+            s = request.cookies.get('store_id', '')
+            u = request.cookies.get('uid', '')
+            if s and u:
+                request.uid = int(u)
+                request.store_id = int(s)
             return f(*args, **kwargs)
 
         if 'Authorization' in request.headers:
@@ -41,7 +46,8 @@ def require_auth(f):
         if time.time() > t.expires:
             print t.expires, time.time()
             return EXPIRE_ACCESS_TOKEN()
-        request.uid = t.user_id
+        request.uid = int(t.user_id)
+        request.store_id = int(t.store_id)
         return f(*args, **kwargs)
     return wrapper
     

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 DEBUG=True
-ENABLE_ROBOT = False
+ENABLE_ROBOT = True
 
 #保存登录的token
 REDIS_HOST="192.168.33.10"
@@ -37,4 +37,8 @@ ANONYMOUS_APP_KEY = "5SlZNtarbl1CllLOneg5vVKdNeLBaQJn"
 ANONYMOUS_APP_SECRET = 'BzzYnNzqdKRLiRfQ1mRNfoBB15WJgYE1'
 
 #im host
-HOST="192.168.3.36"
+HOST="192.168.1.104"
+
+
+RPC = "http://127.0.0.1:60003/"
+RPC_ADDR = ("127.0.0.1", 60003)

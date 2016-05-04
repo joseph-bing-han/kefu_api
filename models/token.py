@@ -37,8 +37,8 @@ class AccessToken(object):
 
 
     def _load(self, rds, key):
-        t = rds.hmget(key, "expires", "token_type", "user_id")
-        self.expires, self.token_type, self.user_id = t
+        t = rds.hmget(key, "expires", "token_type", "user_id", "store_id")
+        self.expires, self.token_type, self.user_id, self.store_id = t
         return True if self.user_id else False
 
     def load(self, rds, token):
@@ -82,7 +82,7 @@ class RefreshToken(object):
 
 
     def _load(self, rds, key):
-        t = rds.hmget(key, "token_type", "user_id")
-        self.token_type, self.user_id = t
+        t = rds.hmget(key, "token_type", "user_id", "store_id")
+        self.token_type, self.user_id, self.store_id = t
         return True if self.user_id else False
 
