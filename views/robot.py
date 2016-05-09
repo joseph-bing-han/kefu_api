@@ -18,11 +18,14 @@ def ask_question():
     if not query:
         return ""
 
-    logging.debug("store id:%s, squery:%s", store_id, query)
+    logging.debug("store id:%s, query:%s", store_id, query)
     try:
-        answers = rpc.ask_question(store_id, query)
+        answers = rpc.ask_question(55, query)
         logging.debug("answers:%s", answers)
     except xmlrpclib.ProtocolError as err:
+        logging.warning("refresh questions err:%s", err)
+        answers = []
+    except Exception as err:
         logging.warning("refresh questions err:%s", err)
         answers = []
 

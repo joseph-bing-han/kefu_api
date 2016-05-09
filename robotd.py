@@ -6,6 +6,7 @@ import random
 import logging
 from libs.mysql import Mysql
 import config
+import copy
 
 dictionary = corpora.Dictionary.load_from_text('data/corpus_wordids.txt')
 lsi = models.LsiModel.load('data/model.lsi')
@@ -19,14 +20,15 @@ def ask_question(store_id, query):
         return []
 
     q = dictionary.doc2bow(list(jieba.cut(query, cut_all=False)))
-     
     sims = index[lsi[q]]
     sims = sorted(enumerate(sims), key=lambda item: -item[1])
     sims = [ item for item in sims if raw_questions[item[0]]['store_id'] == store_id ]
     sims = sims[:3]
     answers = [ raw_questions[item[0]] for item in sims if item[1] > 0.95 ]
+    answers = copy.deepcopy(answers)
     for a in answers:
         a.pop('store_id')
+
     return answers
 
 def load_questions():
