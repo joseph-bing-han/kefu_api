@@ -13,6 +13,7 @@ from functools import wraps
 
 from libs.util import make_response
 from gobelieve import login_gobelieve
+from gobelieve import send_sys_message
 from models import user
 from models import token
 from models.seller import Seller
@@ -92,7 +93,17 @@ def access_token():
     t = token.RefreshToken(**tok)
     t.save(g.rds)
 
-    print "token:", tok
+    now = int(time.time())
+    obj = {
+        "timestamp":now,
+        "device_name":obj.get("device_name", ""),
+        "device_id":obj.get("device_id", ""),
+        "platform":obj.get("platform", 0)
+    }
+
+    content = json.dumps({"login":obj})
+    send_sys_message(uid, content, config.APP_ID, config.APP_SECRET)
+
     return make_response(200, tok)
 
 
