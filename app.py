@@ -12,6 +12,7 @@ import redis
 
 from views import auth
 from views import customer
+from views import message
 from libs.mysql import Mysql
 from libs.util import make_response
 import config
@@ -61,6 +62,7 @@ def init_app(app):
 
     app.register_blueprint(auth.app)
     app.register_blueprint(customer.app)
+    app.register_blueprint(message.app)
     if config.ENABLE_ROBOT:
         from views import robot
         app.register_blueprint(robot.app)

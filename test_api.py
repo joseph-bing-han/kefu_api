@@ -45,7 +45,7 @@ access_token = resp["access_token"]
 refresh_token = resp["refresh_token"]
 
 
-params = {"question":"地球与火星之间的距离"}
+params = {"question":"地球距离火星多远"}
 url = URL + "/robot/answer"
 r = requests.get(url, params=params, headers = headers)
 print r.content
@@ -53,3 +53,9 @@ print r.content
 url = URL + "/customers/%s/%s"%(7, 1)
 r = requests.get(url, headers=headers)
 print r.content
+
+
+url = URL + "/messages"
+params = {"limit":10}
+r = requests.get(url, headers=headers, params=params)
+print r.text
