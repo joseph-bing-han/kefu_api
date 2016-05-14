@@ -34,7 +34,8 @@ var userDB = {
 }
 
 var observer = {
-    handleCustomerMessage: function(msg) {
+
+    handleCustomerMessage: function(msg, tip) {
         try {
             msg.contentObj = JSON.parse(msg.content)
         } catch (e) {
@@ -73,9 +74,9 @@ var observer = {
         if (msg.customerAppID == customerAppID && 
             msg.customerID == customerID) {
             addMessage(msg);
-        } else {
+        } else if (tip === undefined || tip) {
             process.msgTip(msg.customerAppID, msg.customerID);
-        }
+        } 
     },
     handleCustomerSupportMessage: function(msg) {
         if (msg.sellerID != loginUser.uid) {
