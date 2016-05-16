@@ -290,4 +290,50 @@ $(document).ready(function () {
             }
         }
     });
+
+
+    var MSG_CUSTOMER = 24;
+    var MSG_CUSTOMER_SUPPORT = 25;
+
+    var url =  "/messages";
+    $.ajax({
+        url: url,
+        data:{appid:appID, store_id:storeID, uid:uid},
+        headers: {"Authorization": "Bearer " + token},
+        dataType: 'json',
+        success: function (result, status, xhr) {
+            console.log("messges:", result);
+            if (!result) {
+                return;
+            }
+
+            for (var i = 0; i < result.length; i++) {
+                var msg = {};
+                var m = result[i];
+                console.log("msg command:", m['command']);
+
+                if (m['command'] == MSG_CUSTOMER) {
+                    msg.content = m['content'];
+                    msg.customerAppID = m['customer_appid'];
+                    msg.customerID = m['customer_id'];
+                    msg.storeID = m['store_id'];
+                    msg.sellerID = m['seller_id'];
+                    msg.timestamp = m['timestamp'];
+                    observer.handleCustomerMessage(msg);
+                } else if (m['command'] == MSG_CUSTOMER_SUPPORT) {
+                    msg.content = m['content'];
+                    msg.customerAppID = m['customer_appid'];
+                    msg.customerID = m['customer_id'];
+                    msg.storeID = m['store_id'];
+                    msg.sellerID = m['seller_id'];
+                    msg.timestamp = m['timestamp'];
+                    observer.handleCustomerSupportMessage(msg);
+                }
+            }
+        },
+        error: function (xhr, err) {
+            console.log("get customer name err:", err, xhr.status);
+        }
+    });
+
 });
