@@ -24,6 +24,17 @@ ul, ol, li {
 .hide {
   display: none !important; }
 
+.appbg {
+  position: absolute;
+  z-index: 1;
+  background-color: #009688;
+  width: 100%;
+  height: 127px;
+  -webkit-animation: bar-slide 0.2s cubic-bezier(0.1, 0.82, 0.25, 1);
+  animation: bar-slide 0.2s cubic-bezier(0.1, 0.82, 0.25, 1);
+  top: 0;
+  left: 0; }
+
 .app-wrap {
   width: 100%;
   height: 100%; }
@@ -41,8 +52,8 @@ ul, ol, li {
 
 .app {
   box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.06), 0 2px 5px 0 rgba(0, 0, 0, 0.2);
-  /*ie*/
-  height: 100%;
+  width: 80%;
+  height: 90%;
   height: calc(100% - 38px);
   position: relative;
   margin: 0 auto;
@@ -198,6 +209,7 @@ ul, ol, li {
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
+  height: 66%;
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
   -webkit-flex-direction: column;
@@ -255,6 +267,8 @@ ul, ol, li {
         -webkit-transition: -webkit-filter .16s linear;
         max-width: 300px; }
       .chat-list .message .bubble p.pre {
+        word-break: break-all;
+        word-wrap: break-word;
         padding: 0;
         margin: 0;
         line-height: 1.2; }
