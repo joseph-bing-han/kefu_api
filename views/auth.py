@@ -68,16 +68,17 @@ def access_token():
     store_id = None
     seller = Seller.get_seller_with_number(db, username)
 
-    if seller:
-        if seller['password'] == password_md5 or \
-           check_password_hash(seller['password'], password):
-            uid = seller['id']
-            store_id = seller['store_id']
+
+    if seller and (seller['password'] == password_md5 or \
+                   check_password_hash(seller['password'], password)):
+        uid = seller['id']
+        store_id = seller['store_id']
     else:
         try:
             seller_id = int(username)
             seller = Seller.get_seller(db, seller_id)
-            if seller and seller['password'] == password:
+            if seller and (seller['password'] == password_md5 or \
+                           check_password_hash(seller['password'], password)):
                 uid = seller['id']
                 store_id = seller['store_id']
         except ValueError:

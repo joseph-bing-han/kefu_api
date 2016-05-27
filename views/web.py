@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from flask import request, Blueprint, g, session, redirect
 from flask import render_template_string, render_template
+from werkzeug.security import generate_password_hash, check_password_hash
 import flask
 import md5
 import json
@@ -50,20 +51,23 @@ def login():
         return render_template_string(error_html, error="密码为空")
     
     
-    password = md5.new(password).hexdigest()
+    password_md5 = md5.new(password).hexdigest()
     db = g._db
 
     uid = None
     store_id = None
     seller = Seller.get_seller_with_number(db, username)
-    if seller and seller['password'] == password:
+
+    if seller and (seller['password'] == password_md5 or \
+                   check_password_hash(seller['password'], password)):
         uid = seller['id']
         store_id = seller['store_id']
     else:
         try:
             seller_id = int(username)
             seller = Seller.get_seller(db, seller_id)
-            if seller and seller['password'] == password:
+            if seller and (seller['password'] == password_md5 or \
+                           check_password_hash(seller['password'], password)):
                 uid = seller['id']
                 store_id = seller['store_id']
         except ValueError:
