@@ -318,7 +318,9 @@ $(document).ready(function () {
                     msg.storeID = m['store_id'];
                     msg.sellerID = m['seller_id'];
                     msg.timestamp = m['timestamp'];
+                    msg.msgLocalID = msgLocalID++;
                     observer.handleCustomerMessage(msg);
+                    observer.handleCustomerMessageACK(msg);
                 } else if (m['command'] == MSG_CUSTOMER_SUPPORT) {
                     msg.content = m['content'];
                     msg.customerAppID = m['customer_appid'];
@@ -326,6 +328,7 @@ $(document).ready(function () {
                     msg.storeID = m['store_id'];
                     msg.sellerID = m['seller_id'];
                     msg.timestamp = m['timestamp'];
+                    msg.msgLocalID = msgLocalID++;
                     observer.handleCustomerSupportMessage(msg);
                 }
             }

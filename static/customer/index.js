@@ -352,8 +352,9 @@ $(document).ready(function () {
                     msg.storeID = m['store_id'];
                     msg.sellerID = m['seller_id'];
                     msg.timestamp = m['timestamp'];
+                    msg.msgLocalID = msgLocalID++;
                     messageObserver.handleCustomerMessage(msg);
-                    console.log("msg customer:", msg.content);
+                    messageObserver.handleCustomerMessageACK(msg);
                 } else if (m['command'] == MSG_CUSTOMER_SUPPORT) {
                     msg.content = m['content'];
                     msg.customerAppID = m['customer_appid'];
@@ -361,7 +362,7 @@ $(document).ready(function () {
                     msg.storeID = m['store_id'];
                     msg.sellerID = m['seller_id'];
                     msg.timestamp = m['timestamp'];
-                    console.log("msg customer support:", msg.content);
+                    msg.msgLocalID = msgLocalID++;
                     messageObserver.handleCustomerSupportMessage(msg, false);
                 }
             }
