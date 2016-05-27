@@ -105,8 +105,9 @@ var observer = {
     },
 
     handleCustomerMessageACK: function(msg) {
-        console.log("handleCustomerMessageACK...");
+        console.log("handleCustomerMessageACK msg id:", msg.msgLocalID);
         var cid = "" + msg.customerAppID + ":" + msg.customerID;
+        
         var msgLocalID = msg.msgLocalID;
         if (msg.customerAppID == customerAppID && 
             msg.customerID == customerID) {

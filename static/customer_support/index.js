@@ -302,7 +302,6 @@ $(document).ready(function () {
         node.chatHistory.html("");
         for (var i in messages) {
             var msg = messages[i];
-            console.log("message:", msg);
             appendMessage(msg);
         }
 
@@ -347,19 +346,20 @@ $(document).ready(function () {
     var MSG_CUSTOMER = 24;
     var MSG_CUSTOMER_SUPPORT = 25;
 
-    var url =  "messages";
+    var url =  apiURL + "/messages";
     $.ajax({
         url: url,
         dataType: 'json',
+        headers: {"Authorization": "Bearer " + token},
         success: function (result, status, xhr) {
             console.log("messges:", result);
             if (!result) {
                 return;
             }
-
-            for (var i = 0; i < result.length; i++) {
+            msgs = result.data;
+            for (var i = 0; i < msgs.length; i++) {
                 var msg = {};
-                var m = result[i];
+                var m = msgs[i];
                 console.log("msg command:", m['command']);
 
                 if (m['command'] == MSG_CUSTOMER) {
@@ -369,6 +369,7 @@ $(document).ready(function () {
                     msg.storeID = m['store_id'];
                     msg.sellerID = m['seller_id'];
                     msg.timestamp = m['timestamp'];
+                    msg.msgLocalID = msgLocalID++;
                     observer.handleCustomerMessage(msg, false);
                 } else if (m['command'] == MSG_CUSTOMER_SUPPORT) {
                     msg.content = m['content'];
@@ -377,7 +378,10 @@ $(document).ready(function () {
                     msg.storeID = m['store_id'];
                     msg.sellerID = m['seller_id'];
                     msg.timestamp = m['timestamp'];
+                    msg.msgLocalID = msgLocalID++;
                     observer.handleCustomerSupportMessage(msg);
+
+                    observer.handleCustomerMessageACK(msg);
                 }
             }
         },

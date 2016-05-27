@@ -1,17 +1,10 @@
-var msgLocalID = 0;
-
-var sellerID = 0;
-var storeID = 0;
-var appID = 0;
-var uid = 0;
-
-String.format = function () {
-    if (arguments.length == 0)
+String.format = function() {
+    if( arguments.length == 0 )
         return null;
 
-    var str = arguments[0];
-    for (var i = 1; i < arguments.length; i++) {
-        var re = new RegExp('\\{' + (i - 1) + '\\}', 'gm');
+    var str = arguments[0]; 
+    for(var i=1;i<arguments.length;i++) {
+        var re = new RegExp('\\{' + (i-1) + '\\}','gm');
         str = str.replace(re, arguments[i]);
     }
     return str;
@@ -25,25 +18,43 @@ var helper = {
         var m = d.getMinutes();
         return H + ':' + (m < 10 ? '0' + m : m);
     },
-    getUserName: function (user) {
-        if (user.name) {
-            return user.name;
+    getStoreName: function (store) {
+        if (store.name) {
+            return store.name;
         } else {
-            return "匿名(" + user.uid + ")";
+            return "匿名("+store.id+")";
         }
     },
-    getUserAvatar: function (user) {
-        if (user.avatar) {
+    getStoreAvatar: function (store) {
+        if (store.avatar) {
             var parser = document.createElement('a');
             parser.href = user.avatar;
             return parser.pathname;
         } else {
             return '';
         }
-    },
+    }
 };
 
 var htmlLoyout = {
+    buildStore: function (store) {
+        var html = [];
+        var s;
+
+        s = String.format('<li  data-id="{0}">',store.id);
+        html.push(s);
+        if (store.avatar) {
+            html.push('    <img src="' + helper.getStoreAvatar(user) + '" class="avatar" alt=""/>');
+        } else {
+            html.push('    <img src="/static/images/_avatar.png" class="avatar" alt=""/>');
+        }
+        if (helper.getStoreName(store)) {
+            html.push('    <span class="name">' + helper.getStoreName(store) + '</span>');
+        }
+        html.push('    <span class="num">' + (store.num || '') + '</span>');
+        html.push('</li>');
+        return html.join('');
+    },
     buildText: function (msg) {
         var html = [];
         html.push('<li class="chat-item" data-id="' + msg.id + '">');
@@ -86,7 +97,7 @@ var htmlLoyout = {
         html.push('     <div class="bubble">');
         html.push('       <p class="pre"><audio  controls="controls" src="' + audio_url + '"></audio></p>');
         html.push('       <span class="time">' + helper.toTime(msg.timestamp * 1000) + '</span>');
-
+   
         if (msg.ack) {
             html.push('   <span class="ack"></span>');
         }
@@ -98,13 +109,13 @@ var htmlLoyout = {
     },
     buildACK: function () {
         return '<span class="ack"></span>';
-    },
+    }
 };
-
 var node = {
     chatHistory: $("#chatHistory ul"),
+    usersList: $('#usersList'),
+    exit: $('#exit')
 };
-
 var process = {
     playAudio: function () {
 
@@ -118,9 +129,25 @@ var process = {
     appendImage: function (m) {
         node.chatHistory.append(htmlLoyout.buildImage(m));
     },
+    msgTip: function (storeID) {
+        var userDom = node.usersList.find('li[data-id="' + storeID + '"]'),
+            num = '';
+        if (userDom) {
+            num = userDom.find('.num').text();
+            if (!userDom.hasClass('active')) {
+                if (num) {
+                    num++;
+                } else {
+                    num = 1;
+                }
+                userDom.find('.num').text(num);
+            }
+            node.usersList.prepend(userDom);
+        }
+    },
     msgACK: function (msgID) {
         node.chatHistory.find('li[data-id="' + msgID + '"] .bubble').append(htmlLoyout.buildACK());
-    },
+    }
 };
 
 function scrollDown() {
@@ -161,155 +188,161 @@ function addMessage(msg) {
     scrollDown();
 }
 
-observer = {
-    handleCustomerMessage: function (msg) {
-        if (msg.customerID != uid || msg.customerAppID != appID) {
-            return;
-        }
-        try {
-            msg.contentObj = JSON.parse(msg.content)
-        } catch (e) {
-            console.log("json parse exception:", e);
-            return
-        }
+function addStore(store) {
+    node.usersList.prepend(htmlLoyout.buildStore(store));
+}
 
-        sellerID = msg.sellerID;
-        msg.outgoing = true;
-        msg.msgLocalID = msgLocalID++;
-        addMessage(msg);
-    },
-    handleCustomerSupportMessage: function (msg) {
-        if (msg.customerID != uid || msg.customerAppID != appID) {
-            return;
-        }
-        try {
-            msg.contentObj = JSON.parse(msg.content)
-        } catch (e) {
-            console.log("json parse exception:", e);
-            return
-        }
-
-        sellerID = msg.sellerID;
-        msg.outgoing = false;
-        msg.msgLocalID = msgLocalID++;
-        addMessage(msg)
-    },
-    handleCustomerMessageACK: function (msg) {
-        console.log("handleCustomerMessageACK...");
-        var msgLocalID = msg.msgLocalID;
-        process.msgACK(msgLocalID);
-    },
-    handleCustomerMessageFailure: function (msg) {
-        console.log("handleCustomerMessageFailure...");
-    },
-
-    onConnectState: function (state) {
-        if (state == IMService.STATE_CONNECTED) {
-            console.log("im connected");
-        } else if (state == IMService.STATE_CONNECTING) {
-            console.log("im connecting");
-        } else if (state == IMService.STATE_CONNECTFAIL) {
-            console.log("im connect fail");
-        } else if (state == IMService.STATE_UNCONNECTED) {
-            console.log("im unconnected");
-        }
+function setUserName(storeID, name) {
+    var userDom = node.usersList.find('li[data-id="' + storeID + '"]');
+    if (userDom) {
+        userDom.find('.name').text(name);
     }
-};
+}
 
-var im = new IMService(observer);
+function setName(username) {
+    $("#name").text(username);
+}
 
+function showChat() {
+    $("#chat").removeClass('hide').show();
+    scrollDown();
+}
 
 $(document).ready(function () {
-    var r = util.getURLParameter('store', location.search);
-    if (r) {
-        storeID = parseInt(r);
-    }
-
     r = util.getURLParameter('uid', location.search);
     if (r) {
         uid = parseInt(r);
-    } else if (customerID) {
-        uid = customerID;
     }
 
     r = util.getURLParameter('appid', location.search);
     if (r) {
         appID = parseInt(r);
-    } else if (customerAppID) {
-        appID = customerAppID;
     }
 
     var token = "";
     r = util.getURLParameter('token', location.search);
     if (r) {
         token = r;
-    } else if (customerToken) {
-        token = customerToken;
     }
+
+    var name = "";
+    r = util.getURLParameter('name', location.search);
+    if (r) {
+        name = r;
+    }
+
     console.log("appid:", appID);
     console.log("uid:", uid);
-    console.log("store id:", storeID);
     console.log("token:" + token);
+    console.log("name:", name);
 
+    loginUser.name = name;
+    loginUser.uid = uid;
+    loginUser.appID = appID;
+    loginUser.accessToken = token;
+    loginUser.storeID = storeID;
 
-    if (!token || !appID || !uid || !storeID) {
-        return;
-    }
-
+    im.accessToken = loginUser.accessToken;
     if (host) {
         im.host = host;
     }
-    im.accessToken = token
     im.start();
 
+    if (loginUser.name) {
+        setName(loginUser.name);
+    }
+    showChat();
+
+    node.usersList.on('click', 'li', function () {
+        var _this = $(this),
+            store_id = _this.attr('data-id'),
+            main = $('#main');
+
+        if (store_id == storeID) {
+            return;
+        }
+
+        $('#intro').hide();
+        $('#to_user').attr('data-id', store_id);
+
+        store = storeDB.findStore(store_id);
+        if (store) {
+            $('#to_user').text(helper.getStoreName(store));
+        }
+
+        if (store.avatar) {
+            $('#to_user_avatar').attr("src", helper.getStoreAvatar(store));
+        } else {
+            var defaultAvatar = "/static/images/_avatar.png";
+            $('#to_user_avatar').attr("src", defaultAvatar);
+        }
+
+        main.find('.chat-wrap').removeClass('hide');
+        _this.addClass('active').siblings().removeClass('active');
+        _this.find('.num').text('');
+        ///读取聊天记录添加到列表
+        var messages = imDB.loadUserMessage(store_id);
+        node.chatHistory.html("");
+        for (var i in messages) {
+            var msg = messages[i];
+            console.log("message:", msg);
+            appendMessage(msg);
+            sellerID = msg.sellerID;
+        }
+        storeID = store_id;
+    });
+
+    //deal with chat mode.
     $("#entry").keypress(function (e) {
         if (e.keyCode != 13) return;
-        e.stopPropagation();
-        e.preventDefault();
         var msg = $("#entry").val().replace("\n", "");
         if (!util.isBlank(msg)) {
             var now = new Date();
             var obj = {"text": msg};
             var textMsg = JSON.stringify(obj);
+            console.log("message text:", textMsg);
             var message = {
-                customerID: uid,
-                customerAppID: appID,
-                storeID: storeID,
                 sellerID: sellerID,
+                storeID: storeID,
+                customerID: loginUser.uid,
+                customerAppID: loginUser.appID,
                 content: textMsg,
-                contentObj: obj,
-                msgLocalID: msgLocalID++
+                msgLocalID: msgLocalID++,
+                outgoing: true,
+                timestamp: (now.getTime() / 1000)
             };
-            message.outgoing = true;
-            message.timestamp = (now.getTime() / 1000);
-
+            message.contentObj = obj;
             if (im.connectState == IMService.STATE_CONNECTED) {
+                imDB.saveMessage(message.storeID, message);
+
+                console.log("send message:", message);
                 im.sendCustomerMessage(message);
-                $("#entry").val("");
+                $("#entry").val(""); // clear the entry field.
                 addMessage(message);
+                $("#chatHistory").show();
             }
         }
+        return false;
     });
-
 
     var MSG_CUSTOMER = 24;
     var MSG_CUSTOMER_SUPPORT = 25;
 
-    var url =  "/messages";
+    var url =  apiURL + "/messages";
     $.ajax({
         url: url,
-        data:{appid:appID, store_id:storeID, uid:uid},
-        headers: {"Authorization": "Bearer " + token},
         dataType: 'json',
+        headers: {"Authorization": "Bearer " + token},
         success: function (result, status, xhr) {
             console.log("messges:", result);
             if (!result) {
                 return;
             }
+            msgs = result.data
 
-            for (var i = 0; i < result.length; i++) {
+            for (var i = 0; i < msgs.length; i++) {
                 var msg = {};
-                var m = result[i];
+                var m = msgs[i];
                 console.log("msg command:", m['command']);
 
                 if (m['command'] == MSG_CUSTOMER) {
@@ -319,7 +352,8 @@ $(document).ready(function () {
                     msg.storeID = m['store_id'];
                     msg.sellerID = m['seller_id'];
                     msg.timestamp = m['timestamp'];
-                    observer.handleCustomerMessage(msg);
+                    messageObserver.handleCustomerMessage(msg);
+                    console.log("msg customer:", msg.content);
                 } else if (m['command'] == MSG_CUSTOMER_SUPPORT) {
                     msg.content = m['content'];
                     msg.customerAppID = m['customer_appid'];
@@ -327,7 +361,8 @@ $(document).ready(function () {
                     msg.storeID = m['store_id'];
                     msg.sellerID = m['seller_id'];
                     msg.timestamp = m['timestamp'];
-                    observer.handleCustomerSupportMessage(msg);
+                    console.log("msg customer support:", msg.content);
+                    messageObserver.handleCustomerSupportMessage(msg, false);
                 }
             }
         },
@@ -337,3 +372,7 @@ $(document).ready(function () {
     });
 
 });
+
+
+
+

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>
+        狗不理客服
+    </title>
+    <link rel="stylesheet" href="/static/css/index_style.css" type="text/css"/>
+    <script>
+        function validateForm() {
+            return true;
+        }
+    </script>
+</head>
+<body>
+<div class="body">
+    <div class="ltbg"></div>
+    <div class="loginbox">
+        <form name="myForm" action="login" method="post" onsubmit="return validateForm()">
+            <table class="lg-table">
+                <tr>
+                    <td>
+                        <input name="username" type="text" class="input-block-level" placeholder="客服号"/>
+                        <span class="l-i l-i01"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input name="password" type="text" class="input-block-level" placeholder="密码"/>
+                        <span class="l-i l-i02"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input id="login" type="submit" class="input-block-level lbtn" value="登录"/>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+</div>
+</body>
+</html>

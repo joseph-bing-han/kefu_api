@@ -11,6 +11,8 @@ import md5
 from datetime import datetime
 from functools import wraps
 
+from werkzeug.security import generate_password_hash, check_password_hash
+
 from libs.util import make_response
 from gobelieve import login_gobelieve
 from gobelieve import send_sys_message
@@ -55,15 +57,22 @@ def access_token():
     if not username or not password:
         return INVALID_PARAM()
 
-    password = md5.new(password).hexdigest()
+    password_md5 = md5.new(password).hexdigest()
+
+
+
+
     db = g._db
 
     uid = None
     store_id = None
     seller = Seller.get_seller_with_number(db, username)
-    if seller and seller['password'] == password:
-        uid = seller['id']
-        store_id = seller['store_id']
+
+    if seller:
+        if seller['password'] == password_md5 or \
+           check_password_hash(seller['password'], password):
+            uid = seller['id']
+            store_id = seller['store_id']
     else:
         try:
             seller_id = int(username)

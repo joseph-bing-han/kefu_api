@@ -8,6 +8,7 @@ import base64
 import logging
 from models.seller import Seller
 from models.store import Store
+from libs.util import make_response
 
 from gobelieve import login_gobelieve
 import config
@@ -34,9 +35,9 @@ def index():
         uid = request.cookies.get('uid')
         uid = int(uid)
         seller = Seller.get_seller(g._db, uid)
-        return render_template('chat.html', host=config.HOST, name=seller['name'])
+        return render_template('customer_support/chat.html', host=config.HOST, name=seller['name'], apiURL=config.APIURL)
     else:
-        return render_template('index.html')
+        return render_template('customer_support/index.html')
 
 
 @app.route("/login", methods=["POST"])
@@ -103,7 +104,7 @@ def chat():
         name = ""
     
     if uid and appid and token:
-        return render_template("customer_chat.html", host=config.HOST, customerAppID=int(appid), customerID=int(uid), customerToken=token, name=name)
+        return render_template("customer/chat.html", host=config.HOST, customerAppID=int(appid), customerID=int(uid), customerToken=token, name=name, apiURL=config.APIURL)
 
     #生成临时用户
     rds = g.rds
@@ -111,4 +112,32 @@ def chat():
     uid = rds.incr(key)
     appid = config.ANONYMOUS_APP_ID
     token = login_gobelieve(uid, "", config.ANONYMOUS_APP_ID, config.ANONYMOUS_APP_SECRET)
-    return render_template("customer_chat.html", host=config.HOST, customerAppID=appid, customerID=uid, customerToken=token, name=name)
+    return render_template("customer/chat.html", host=config.HOST, customerAppID=appid, customerID=uid, customerToken=token, name=name, apiURL=config.APIURL)
+
+
+
+@app.route("/chat/pc/conversation.html")
+def chat_conversation():
+    uid = request.args.get('uid')
+    appid = request.args.get('appid')
+    token = request.args.get('token')
+    
+    if uid and appid and token:
+        return render_template("customer/conversation.html", host=config.HOST, apiURL=config.APIURL)
+    else:
+        return "没有用户信息"
+
+
+@app.route("/stores/<int:store_id>")
+def get_store(store_id):
+    s = Store.get_store(g._db, store_id)
+    obj = {
+        "store_id":store_id,
+        "name":''
+    }
+
+    if s:
+        obj['name'] = s['name']
+    
+    return make_response(200, obj)
+        

@@ -10,7 +10,7 @@
         <div class="app">
             <div class="pane pane-list">
                 <div class="profile pane-header pane-list-header">
-                    <img src="static/images/_avatar.png" class="avatar" alt=""/>
+                    <img src="/static/images/_avatar.png" class="avatar" alt=""/>
                     <span class="name" id="name"></span>
                     <a class="exit" href="#" id="exit">退出</a>
                 </div>
@@ -24,7 +24,7 @@
                     请先择联系人
                 </div>
                 <div class="pane-header pane-chat-header">
-                    <img src="static/images/_avatar.png" id="to_user_avatar" class="avatar" alt=""/>
+                    <img src="/static/images/_avatar.png" id="to_user_avatar" class="avatar" alt=""/>
      
                     <div class="name" id="to_user"></div>
                 </div>
@@ -41,18 +41,18 @@
 
     <script>
         var host = "{{ host }}";
-        var name = "{{ name }}";
+        var apiURL = "{{ apiURL }}";
     </script>
 
     <script type="text/javascript" src="/static/lib/console.js"></script>
     <script type="text/javascript" src="/static/lib/json2.js"></script>
     <script type="text/javascript" src="/static/lib/im.js"></script>
-    <script type="text/javascript" src="/static/imdb.js"></script>
-    <script type="text/javascript" src="/static/util.js"></script>
-     
     <script type="text/javascript" src="/static/lib/jquery-1.11.1.js"></script>
-    <script type="text/javascript" src="/static/client.js"></script>
-    <script type="text/javascript" src="/static/index.js"></script>
+
+    <script type="text/javascript" src="/static/customer/imdb.js"></script>
+    <script type="text/javascript" src="/static/customer/util.js"></script>
+    <script type="text/javascript" src="/static/customer/client.js"></script>
+    <script type="text/javascript" src="/static/customer/index.js"></script>
 
 </body>
 </html>
