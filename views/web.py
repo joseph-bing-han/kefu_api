@@ -11,6 +11,8 @@ from models.seller import Seller
 from models.store import Store
 from libs.util import make_response
 
+from authorization import check_seller_password
+
 from gobelieve import login_gobelieve
 import config
 
@@ -40,7 +42,7 @@ def index():
     else:
         return render_template('customer_support/index.html')
 
-
+    
 @app.route("/login", methods=["POST"])
 def login():
     username = request.form.get('username')
@@ -58,16 +60,14 @@ def login():
     store_id = None
     seller = Seller.get_seller_with_number(db, username)
 
-    if seller and (seller['password'] == password_md5 or \
-                   check_password_hash(seller['password'], password)):
+    if check_seller_password(seller, password):
         uid = seller['id']
         store_id = seller['store_id']
     else:
         try:
             seller_id = int(username)
             seller = Seller.get_seller(db, seller_id)
-            if seller and (seller['password'] == password_md5 or \
-                           check_password_hash(seller['password'], password)):
+            if check_seller_password(seller, password):
                 uid = seller['id']
                 store_id = seller['store_id']
         except ValueError:
