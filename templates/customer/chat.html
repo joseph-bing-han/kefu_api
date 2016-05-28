@@ -1,45 +1,57 @@
 <!DOCTYPE html>
 <html>
 
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <title>
-            客服
-        </title>
-        <link rel="stylesheet" href="/static/css/customer.css" type="text/css" />
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>
+        客服
+    </title>
+    <link rel="stylesheet" href="/static/css/customer.css" type="text/css" />
 
-    </head>
+</head>
 
-    <body>
-        <div class="main pane pane-chat" id="main">
-            <div class="pane-header pane-chat-header">
-                <img src="/static/images/_avatar.png" id="to_user_avatar" class="avatar" alt=""/>
+<body>
+<div class="content-main clearfix">
+    <div class="main pane pane-chat" id="main">
+        <div class="pane-header pane-chat-header">
+            <img src="/static/images/_avatar.png" id="to_user_avatar" class="avatar" alt=""/>
 
-                <div class="name" id="to_user">{{name}}</div>
-            </div>
-            <div class="chat-list" id="chatHistory">
-                <ul>
-                </ul>
-            </div>
-            <div class="chat-form pane-chat-footer">
-                <textarea id="entry" class="chat-input"></textarea>
-            </div>
+            <div class="name" id="to_user">{{name}}</div>
         </div>
+        <div class="chat-list" id="chatHistory">
+            <ul>
+            </ul>
+        </div>
+        <div class="chat-form pane-chat-footer">
+            <textarea id="entry" class="chat-input"></textarea>
+        </div>
+    </div>
+    <div class="main-right">
+        <iframe class="iframeR" frameborder="0"></iframe>
+    </div>
 
-        <script src="/static/lib/jquery-1.11.1.js" type="text/javascript" ></script>
-        <script src="/static/lib/console.js" type="text/javascript"></script>
-        <script src="/static/lib/json2.js"></script>
-        <script src="/static/lib/im.js"></script>
-        <script src="/static/customer/util.js"></script>
-        <script src="/static/customer/customer_chat.js"></script>
-        <script>
-          var host = "{{host}}";
-          var apiURL = "{{ apiURL }}"
-          var customerID = "{{customerID}}";
-          var customerAppID = "{{customerAppID}}";
-          var customerToken = "{{customerToken}}";
-        </script>
+    <script src="/static/lib/jquery-1.11.1.js" type="text/javascript" ></script>
+    <script src="/static/lib/console.js" type="text/javascript"></script>
+    <script src="/static/lib/json2.js"></script>
+    <script src="/static/lib/im.js"></script>
+    <script src="/static/customer/util.js"></script>
+    <script src="/static/customer/customer_chat.js"></script>
 
-    </body>
+    <script>
+        var host = "{{host}}";
+        var apiURL = "{{ apiURL }}"
+        var customerID = "{{customerID}}";
+        var customerAppID = "{{customerAppID}}";
+        var customerToken = "{{customerToken}}";
+        var goods_url = "{{ goods_url }}";
 
+        if (!goods_url) {
+           $('.main-right').remove();
+           $('.content-main').css({"padding-right":"0"});
+        } else {
+           $('.iframeR').attr('src', goods_url);
+        }
+    </script>
+</div>
+</body>
 </html>

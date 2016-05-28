@@ -97,6 +97,7 @@ def chat():
     uid = request.args.get('uid')
     appid = request.args.get('appid')
     token = request.args.get('token')
+    goods_url = request.args.get('goods_url', '')
 
     if not store:
         return render_template_string(error_html, error="未指定商店id")
@@ -108,7 +109,7 @@ def chat():
         name = ""
     
     if uid and appid and token:
-        return render_template("customer/chat.html", host=config.HOST, customerAppID=int(appid), customerID=int(uid), customerToken=token, name=name, apiURL=config.APIURL)
+        return render_template("customer/chat.html", host=config.HOST, customerAppID=int(appid), customerID=int(uid), customerToken=token, name=name, apiURL=config.APIURL, goods_url = goods_url)
 
     #生成临时用户
     rds = g.rds
@@ -116,7 +117,7 @@ def chat():
     uid = rds.incr(key)
     appid = config.ANONYMOUS_APP_ID
     token = login_gobelieve(uid, "", config.ANONYMOUS_APP_ID, config.ANONYMOUS_APP_SECRET)
-    return render_template("customer/chat.html", host=config.HOST, customerAppID=appid, customerID=uid, customerToken=token, name=name, apiURL=config.APIURL)
+    return render_template("customer/chat.html", host=config.HOST, customerAppID=appid, customerID=uid, customerToken=token, name=name, apiURL=config.APIURL, goods_url=goods_url)
 
 
 
