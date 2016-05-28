@@ -9,6 +9,7 @@ import json
 import base64
 import md5
 import requests
+from werkzeug.security import generate_password_hash, check_password_hash
 
 from models import token
 from libs.util import make_response
@@ -50,6 +51,26 @@ def require_auth(f):
         return f(*args, **kwargs)
     return wrapper
     
+
+def check_seller_password(seller, password):
+    if not seller:
+        return False
+
+    password_md5 = md5.new(password).hexdigest()
+    if (seller['password'] == password_md5 or \
+        check_password_hash(seller['password'], password)):
+        return True
+    else:
+        p = seller['password']
+        parts = p.split(":")
+        if len(parts) == 2:
+            salt = parts[0]
+            password_md5 = md5.new(md5.new(password).hexdigest() + salt).hexdigest()
+            password_md5 = salt + ":" + password_md5
+            if p == password_md5:
+                return True
+
+    return False
 
 
 
