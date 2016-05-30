@@ -1,0 +1,49 @@
+# -*- coding: utf-8 -*-
+DEBUG=False
+ENABLE_ROBOT = True
+
+#保存登录的token
+REDIS_HOST="10.168.188.86"
+REDIS_PORT=6380
+REDIS_DB=1
+REDIS_PASSWORD=""
+
+IM_REDIS_HOST="10.168.188.86"
+IM_REDIS_PORT=6380
+IM_REDIS_DB=0
+IM_REDIS_PASSWORD=""
+
+
+#读取客服的用户名和密码
+MYSQL_HOST = "rdsme36vin2uqrn.mysql.rds.aliyuncs.com"
+MYSQL_PORT = 3306
+MYSQL_AUTOCOMMIT = True
+MYSQL_CHARSET = 'utf8'
+MYSQL_USER = "gobelieve"
+MYSQL_PASSWD = "123456"
+MYSQL_DATABASE = "gobelieve"
+# host,port,user,password,db,auto_commit,charset
+MYSQL = (MYSQL_HOST, MYSQL_PORT, MYSQL_USER, MYSQL_PASSWD, MYSQL_DATABASE, MYSQL_AUTOCOMMIT, MYSQL_CHARSET)
+
+#获取gobelieve的token
+GOBELIEVE_URL = "http://127.0.0.1:20000"
+
+#客服app配置
+APP_ID = 17
+APP_KEY = "9xgK0dEMM0L3Zt7m11ZBcPRB6WlvjhAo"
+APP_SECRET = "LlCTMpnP9fW9nU9LUxySPs7gFJoIOe1P"
+
+#匿名客户端,生成临时uid
+ANONYMOUS_APP_ID = 0
+ANONYMOUS_APP_KEY = ''
+ANONYMOUS_APP_SECRET = ''
+
+#im host
+HOST="121.41.30.52"
+APIURL="http://121.41.30.52:20000"
+
+
+RPC = "http://127.0.0.1:60003"
+RPC_ADDR = ("127.0.0.1", 60003)
+
+IM_RPC_URL = "http://10.168.188.86:7777"
