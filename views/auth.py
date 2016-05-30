@@ -17,7 +17,6 @@ from authorization import check_seller_password
 from libs.util import make_response
 from gobelieve import login_gobelieve
 from gobelieve import send_sys_message
-from models import user
 from models import token
 from models.seller import Seller
 import config
