@@ -26,6 +26,9 @@ app.debug = config.DEBUG
 
 rds = redis.StrictRedis(host=config.REDIS_HOST, port=config.REDIS_PORT, db=config.REDIS_DB, password=config.REDIS_PASSWORD)
 
+imrds = redis.StrictRedis(host=config.IM_REDIS_HOST, port=config.IM_REDIS_PORT, db=config.IM_REDIS_DB, password=config.IM_REDIS_PASSWORD)
+
+
 def SERVER_INTERNAL_ERROR():
     e = {"error":"Server Internal Error!"}
     logging.error("server internal error")
@@ -39,7 +42,7 @@ def generic_error_handler(err):
 def before_request():
     logging.debug("before request")
     g.rds = rds
-    g.imrds = rds
+    g.imrds = imrds
 
     cnf = config.MYSQL
     g._db = Mysql(*cnf)
