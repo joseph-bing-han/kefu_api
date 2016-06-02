@@ -127,11 +127,11 @@ def chat(is_international):
 
 @app.route("/chat/pc/index.html")
 def chat_cn():
-    chat(False)
+    return chat(False)
 
 @app.route("/chat/pci/index.html")
 def chat_international():
-    chat(True)
+    return chat(True)
 
 
 @app.route("/chat/pc/conversation.html")
