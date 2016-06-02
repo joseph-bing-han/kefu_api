@@ -91,8 +91,8 @@ def login():
     response.set_cookie('uid', str(seller['id']))
     return response
 
-@app.route("/chat/pc/index.html")
-def chat():
+
+def chat(is_international):
     store = request.args.get('store')
     uid = request.args.get('uid')
     appid = request.args.get('appid')
@@ -109,7 +109,10 @@ def chat():
         name = ""
     
     if uid and appid and token:
-        return render_template("customer/chat.html", host=config.HOST, customerAppID=int(appid), customerID=int(uid), customerToken=token, name=name, apiURL=config.APIURL, goods_url = goods_url)
+        if is_international:
+            return render_template("customer/chatInternational.html", host=config.HOST, customerAppID=int(appid), customerID=int(uid), customerToken=token, name=name, apiURL=config.APIURL, goods_url = goods_url)
+        else:
+            return render_template("customer/chat.html", host=config.HOST, customerAppID=int(appid), customerID=int(uid), customerToken=token, name=name, apiURL=config.APIURL, goods_url = goods_url)
 
     #生成临时用户
     rds = g.rds
@@ -117,8 +120,18 @@ def chat():
     uid = rds.incr(key)
     appid = config.ANONYMOUS_APP_ID
     token = login_gobelieve(uid, "", config.ANONYMOUS_APP_ID, config.ANONYMOUS_APP_SECRET)
-    return render_template("customer/chat.html", host=config.HOST, customerAppID=appid, customerID=uid, customerToken=token, name=name, apiURL=config.APIURL, goods_url=goods_url)
+    if is_international:
+        return render_template("customer/chatInternational.html", host=config.HOST, customerAppID=appid, customerID=uid, customerToken=token, name=name, apiURL=config.APIURL, goods_url=goods_url)
+    else:
+        return render_template("customer/chat.html", host=config.HOST, customerAppID=appid, customerID=uid, customerToken=token, name=name, apiURL=config.APIURL, goods_url=goods_url)
 
+@app.route("/chat/pc/index.html")
+def chat_cn():
+    chat(False)
+
+@app.route("/chat/pci/index.html")
+def chat_international():
+    chat(True)
 
 
 @app.route("/chat/pc/conversation.html")
