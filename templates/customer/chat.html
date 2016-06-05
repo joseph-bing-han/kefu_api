@@ -38,9 +38,10 @@
 <div class="content-main clearfix">
     <div class="main pane pane-chat" id="main">
         <div class="pane-header pane-chat-header">
-            <img src="/static/images/_avatar.png" id="to_user_avatar" class="avatar" alt=""/>
+            <img src="/static/images/img-default.png" id="to_user_avatar" class="avatar" alt=""/>
 
             <div class="name" id="to_user">{{name}}</div>
+            <span class="close"><img src="/static/images/close.png" alt=""></span>
         </div>
         <div class="chat-list" id="chatHistory">
             <ul>
@@ -79,6 +80,11 @@
         $(function(){
             $('body').on('click','.chat-list .chat-item',function(){
                 $('.message ',$(this)).append('<span class="translate">翻译</span>');
+            });
+            $('.close').click(function(){
+                  window.opener = null;
+                  window.open("", "_self");
+                  window.close();   
             });
         });
    

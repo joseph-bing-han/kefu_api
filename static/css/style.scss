@@ -1,6 +1,6 @@
 html{height: 100%;width: 100%;}
 body {
-    background-color: #ddd;
+    background-color: #B9B5B5;
     font-size: 1em;
     height: 100%;
     width: 100%;
@@ -412,7 +412,7 @@ ul, ol, li {
 }
 
 .pane-chat-footer {
-    background-color: rgba(255, 255, 255, .6);
+    background-color: rgba(218, 214, 214, 0.6);
     z-index: 102;
     position: relative;
     transform: translateZ(0);
@@ -427,7 +427,7 @@ ul, ol, li {
         border-radius: 5px;
         background-clip: padding-box;
         background-color: #fff;
-        width: 100%;
+        width: 99%;
         border: 0;
         outline: none;
         padding-left: 8px;

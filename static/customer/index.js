@@ -46,7 +46,7 @@ var htmlLoyout = {
         if (store.avatar) {
             html.push('    <img src="' + helper.getStoreAvatar(user) + '" class="avatar" alt=""/>');
         } else {
-            html.push('    <img src="/static/images/_avatar.png" class="avatar" alt=""/>');
+            html.push('    <img src="/static/images/kfl.png" class="avatar" alt=""/>');
         }
         if (helper.getStoreName(store)) {
             html.push('    <span class="name">' + helper.getStoreName(store) + '</span>');
@@ -58,6 +58,11 @@ var htmlLoyout = {
     buildText: function (msg) {
         var html = [];
         html.push('<li class="chat-item" data-id="' + msg.id + '">');
+		if(msg.cls=='message-out'){
+		html.push('<div style="float:right;margin-left:20px"><img src="/static/images/_avatar.png" width="50px"></div>');
+		}else if(msg.cls=='message-in'){
+		html.push('<div style="float:left;margin-right:20px"><img src="/static/images/kfl.png" width="50px"></div>');
+		}
         html.push('    <div class="message ' + msg.cls + '">');
         html.push('        <div class="bubble"><p class="pre">' + msg.text + '</p>');
         html.push('           <span class="time">' + helper.toTime(msg.timestamp * 1000) + '</span>');
@@ -273,7 +278,7 @@ $(document).ready(function () {
         if (store.avatar) {
             $('#to_user_avatar').attr("src", helper.getStoreAvatar(store));
         } else {
-            var defaultAvatar = "/static/images/_avatar.png";
+            var defaultAvatar = "/static/images/img-default.png";
             $('#to_user_avatar').attr("src", defaultAvatar);
         }
 
