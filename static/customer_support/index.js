@@ -234,6 +234,24 @@ function showChat() {
     scrollDown();
 }
 
+function translateText(text, obj) {
+    console.log("translate...");
+    var url =  apiURL + "/translate?text="+encodeURIComponent(text);
+    $.ajax({
+        url: url,
+        dataType: 'json',
+        headers: {"Authorization": "Bearer " + loginUser.accessToken},
+        success: function (result, status, xhr) {
+            console.log("translate:", result.translation);
+            $('.message ', obj).append('<span class="translate">' + result.translation + '</span>');
+        },
+        error: function (xhr, err) {
+            console.log("get customer name err:", err, xhr.status);
+        }
+    });
+}
+
+
 $(document).ready(function () {
     var token = util.getCookie("token");
     var uid = util.getCookie("uid");
@@ -260,6 +278,18 @@ $(document).ready(function () {
         setName(loginUser.name);
     }
     showChat();
+
+    $('body').on('click','.chat-list .chat-item',function(){
+        var msgid = $(this).attr('data-id');
+        console.log("msgid:" + msgid);
+
+        var cid = "" + customerAppID + ":" + customerID;
+        var m = imDB.findMessage(cid, msgid);
+        console.log("mmm:" + m + " storeid:" + storeID);
+        if (m && m.contentObj.text) {
+            translateText(m.contentObj.text, $(this));
+        }
+    });
 
     node.exit.on('click', function () {
         document.cookie = 'token=';

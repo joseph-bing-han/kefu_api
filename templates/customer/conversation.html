@@ -3,6 +3,36 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <link rel="stylesheet" href="/static/css/style.css?v=1" type="text/css"/>
+
+
+    <style>
+        .chat-list .message{
+            position: relative;
+        }
+        .chat-list .bubble{
+            cursor: pointer;
+        }
+        .chat-list .translate{
+            position: absolute;
+            top: 50%;
+            margin-top: -10px;
+            color: #666;
+            cursor: pointer;
+            width: 40px;
+            font-size: 12px;
+            text-align: center;
+        }
+        .chat-list .message-out .translate{
+            right: 100%;
+        }
+        .chat-list .message-in .translate{
+            left: 100%;
+        }
+    </style> 
+
+
+    <script type="text/javascript" src="/static/lib/jquery-1.11.1.js"></script>
+
 </head>
 <body>
     <div id="chat" class="app-wrap full-wrap">
@@ -46,7 +76,7 @@
     <script type="text/javascript" src="/static/lib/console.js"></script>
     <script type="text/javascript" src="/static/lib/json2.js"></script>
     <script type="text/javascript" src="/static/lib/im.js"></script>
-    <script type="text/javascript" src="/static/lib/jquery-1.11.1.js"></script>
+
 
     <script type="text/javascript" src="/static/customer/imdb.js"></script>
     <script type="text/javascript" src="/static/customer/util.js"></script>

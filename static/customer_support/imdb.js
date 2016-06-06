@@ -31,3 +31,19 @@ IMDB.prototype.ackMessage = function(uid, msgLocalID) {
         }
     }
 }
+
+IMDB.prototype.findMessage = function(uid, msgLocalID) {
+    if (!this.messages[uid]) {
+        return null;
+    }
+
+    var messages = this.messages[uid];
+    for (var i in messages) {
+        var msg = messages[i];
+        if (msg.msgLocalID == msgLocalID) {
+            return msg;
+        }
+    }
+    return null;
+}
+

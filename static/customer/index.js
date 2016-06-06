@@ -213,6 +213,23 @@ function showChat() {
     scrollDown();
 }
 
+function translateText(text, obj) {
+    var url =  apiURL + "/translate?text="+encodeURIComponent(text);
+    $.ajax({
+        url: url,
+        dataType: 'json',
+        headers: {"Authorization": "Bearer " + loginUser.accessToken},
+        success: function (result, status, xhr) {
+            console.log("translate:", result.translation);
+            $('.message ', obj).append('<span class="translate">' + result.translation + '</span>');
+        },
+        error: function (xhr, err) {
+            console.log("get customer name err:", err, xhr.status);
+        }
+    });
+}
+
+
 $(document).ready(function () {
     r = util.getURLParameter('uid', location.search);
     if (r) {
@@ -257,6 +274,17 @@ $(document).ready(function () {
         setName(loginUser.name);
     }
     showChat();
+
+
+    $('body').on('click','.chat-list .chat-item',function(){
+        var msgid = $(this).attr('data-id');
+        console.log("msgid:" + msgid);
+
+        var m = imDB.findMessage(storeID, msgid);
+        if (m && m.contentObj.text) {
+            translateText(m.contentObj.text, $(this));
+        }
+    });
 
     node.usersList.on('click', 'li', function () {
         var _this = $(this),
