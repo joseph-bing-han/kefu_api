@@ -37,7 +37,7 @@ def generic_error_handler(err):
 def before_request():
     logging.debug("before request")
     g.rds = rds
-    g.imrds = rds
+    g.imrds = imrds
 
     cnf = config.MYSQL
     g._db = Mysql(*cnf)
