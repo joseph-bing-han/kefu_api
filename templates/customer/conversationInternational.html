@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="/static/css/style.css?v=1" type="text/css"/>
+
+
+    <style>
+        .chat-list .message{
+            position: relative;
+        }
+        .chat-list .bubble{
+            cursor: pointer;
+        }
+        .chat-list .translate{
+          
+            color: #666;
+            cursor: pointer;
+            font-size: 13px;
+            text-align: center;
+            padding: 8px 7px 8px 10px;
+        }
+       /* .chat-list .message-out .translate{
+            right: 100%;
+        }*/
+        .chat-list .message-in .translate{
+            left: 100%;
+        }
+    </style> 
+
+
+    <script type="text/javascript" src="/static/lib/jquery-1.11.1.js"></script>
+
+</head>
+<body>
+    <div id="chat" class="app-wrap full-wrap">
+      <div class="appbg"></div>
+        <div class="app">
+            <div class="pane pane-list">
+                <div class="profile pane-header pane-list-header">
+                    <img src="/static/images/_avatar.png" class="avatar" alt=""/>
+                    <span class="name" id="name"></span>
+                </div>
+                <div class="contact-list">
+                    <ul id="usersList">
+                    </ul>
+                </div>
+            </div>
+            <div class="main pane pane-chat" id="main">
+                <div class="intro" id="intro">
+                 
+                </div>
+                <div class="pane-header pane-chat-header">
+                    <img src="/static/images/_avatar.png" id="to_user_avatar" class="avatar" alt=""/>
+     
+                    <div class="name" id="to_user"></div>
+                </div>
+                <div class="chat-list" id="chatHistory">
+                    <ul>
+                    </ul>
+                </div>
+                <div class="chat-form pane-chat-footer">
+                    <textarea id="entry" class="chat-input"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var host = "{{ host }}";
+        var apiURL = "{{ apiURL }}";
+    </script>
+
+    <script type="text/javascript" src="/static/lib/console.js"></script>
+    <script type="text/javascript" src="/static/lib/json2.js"></script>
+    <script type="text/javascript" src="/static/lib/im.js"></script>
+
+
+    <script type="text/javascript" src="/static/customer/imdb.js"></script>
+    <script type="text/javascript" src="/static/customer/util.js"></script>
+    <script type="text/javascript" src="/static/customer/client.js"></script>
+    <script type="text/javascript" src="/static/customer/index.js"></script>
+
+</body>
+</html>

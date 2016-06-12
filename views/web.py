@@ -146,6 +146,18 @@ def chat_conversation():
         return "没有用户信息"
 
 
+@app.route("/chat/pci/conversation.html")
+def chat_conversation():
+    uid = request.args.get('uid')
+    appid = request.args.get('appid')
+    token = request.args.get('token')
+    
+    if uid and appid and token:
+        return render_template("customer/conversationInternational.html", host=config.HOST, apiURL=config.APIURL)
+    else:
+        return "没有用户信息"
+
+
 @app.route("/stores/<int:store_id>")
 def get_store(store_id):
     s = Store.get_store(g._db, store_id)
