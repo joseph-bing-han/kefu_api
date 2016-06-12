@@ -147,7 +147,7 @@ def chat_conversation():
 
 
 @app.route("/chat/pci/conversation.html")
-def chat_conversation():
+def chat_conversation_international():
     uid = request.args.get('uid')
     appid = request.args.get('appid')
     token = request.args.get('token')
