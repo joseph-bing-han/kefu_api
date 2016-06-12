@@ -243,7 +243,7 @@ function translateText(text, obj) {
         headers: {"Authorization": "Bearer " + loginUser.accessToken},
         success: function (result, status, xhr) {
             console.log("translate:", result.translation);
-            $('.message ', obj).append('<span class="translate">' + result.translation + '</span>');
+            $('.bubble', obj).append('<span class="translate">' + result.translation + '</span>');
         },
         error: function (xhr, err) {
             console.log("get customer name err:", err, xhr.status);

@@ -249,7 +249,7 @@ ul, ol, li {
     background-size: contain;
     background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAmCAYAAADeB1slAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAZZJREFUeNq0l79Kw1AUh3tjSTRa0CWD+GcQBHUsDj6ALpLJuZBBcMjq6ib4CA4OggpuGXwIH0CIwS7aQRyl4JCmaY6/QCIxxqZN7vngkBBy73eTc3PviSCiRooQoiELSjpWGsywCDB4jVUAdG5Bi1sw4Bbw5iAIgnlWgaIoa9yCTe4cbGc/ip+QRRRFz5QgXYB+ViiD9FeE0R/mjVKfAILH7BNIFaCPXcohVYDRP7AJ0P6ACpAiQNsW4pVFgHYCcU//IENwQWOoJUCbcyqhkgD3ziJuaAKmFiRz/YkmZGJBssZcIkKaglIBru+NRqMrHH2qQKEA50vo9AxHj2oiikpHXHN/bRo1+CNIqrIvRJOldIRk4Pv+MRauD1k7UFGShWmauud5Zr/fv0M+PqvmoGwWxUlpWpa12O12jyC7DsPwTeo0zcsQc47jbPV6vRMIb1FkvYz7NkSNH5A4fzOxtNPptGzb3jEMY0PX9XVN05ZVVV3F+b7MHU2kQoTabrd15O6dpS5KGQ6Hp6wC13UXBNdPYMq3AAMA932Yhlf0jSsAAAAASUVORK5CYII=); }
 .chat-list .message-out {
-    background-color: #B7D9FB;
+    background-color: #dcf8c6;
     float: right;
     -webkit-transform-origin: bottom right;
     -ms-transform-origin: bottom right;

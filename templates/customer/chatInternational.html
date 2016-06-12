@@ -16,17 +16,12 @@
             cursor: pointer;
         }
         .chat-list .translate{
-            position: absolute;
-            top: 50%;
-            margin-top: -10px;
             color: #666;
-            cursor: pointer;
-            width: 40px;
-            font-size: 12px;
-            text-align: center;
+            font-size: 13px;
+            padding: 8px 7px 8px 10px;
         }
         .chat-list .message-out .translate{
-            right: 100%;
+           /* right: 100%;*/
         }
         .chat-list .message-in .translate{
             left: 100%;
@@ -78,9 +73,9 @@
         }
         
         $(function(){
-            $('body').on('click','.chat-list .chat-item',function(){
+            /*$('body').on('click','.chat-list .chat-item',function(){
                 $('.message ',$(this)).append('<span class="translate">翻译</span>');
-            });
+            });*/
             $('.close').click(function(){
                   window.opener = null;
                   window.open("", "_self");
