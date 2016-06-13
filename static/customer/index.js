@@ -112,6 +112,30 @@ var htmlLoyout = {
         html.push('</li>');
         return html.join('');
     },
+    buildGoods: function (msg) {
+        var html = [];
+        html.push('<li class="chat-item" data-id="' + msg.id + '">');
+		if(msg.cls=='message-out'){
+		html.push('<div style="float:right;margin-left:20px"><img src="/static/images/_avatar.png" width="50px"></div>');
+		}else if(msg.cls=='message-in'){
+		html.push('<div style="float:left;margin-right:20px"><img src="/static/images/kfl.png" width="50px"></div>');
+		}
+        html.push('    <div class="message ' + msg.cls + '">');
+	html.push('        <div class="bubble">');
+	html.push('<a href="'+msg.goods.url+'"><img src="'+msg.goods.image+'" width="150px" height="150px"></a>');
+	html.push('<p>'+msg.goods.title+'</p>');
+	html.push('<p>'+msg.goods.content+'</p>');
+        html.push('           <span class="time">' + helper.toTime(msg.timestamp * 1000) + '</span>');
+
+        if (msg.ack) {
+            html.push('   <span class="ack"></span>');
+        }
+
+        html.push('        </div>');
+        html.push('    </div>');
+        html.push('</li>');
+        return html.join('');
+    },
     buildACK: function () {
         return '<span class="ack"></span>';
     }
@@ -133,6 +157,9 @@ var process = {
     },
     appendImage: function (m) {
         node.chatHistory.append(htmlLoyout.buildImage(m));
+    },
+    appendGoods: function (m) {
+        node.chatHistory.append(htmlLoyout.buildGoods(m));
     },
     msgTip: function (storeID) {
         var userDom = node.usersList.find('li[data-id="' + storeID + '"]'),
@@ -184,7 +211,11 @@ function appendMessage(msg) {
     } else if (msg.contentObj.image) {
         m.image = msg.contentObj.image;
         process.appendImage(m);
+    } else if (msg.contentObj.goods) {
+        m.goods = msg.contentObj.goods;
+        process.appendGoods(m);
     }
+
 }
 
 // add message on board

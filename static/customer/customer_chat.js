@@ -49,11 +49,11 @@ var htmlLoyout = {
     buildText: function (msg) {
         var html = [];
         html.push('<li class="chat-item" data-id="' + msg.id + '">');
-		if(msg.cls=='message-out'){
-		html.push('<div style="float:right;margin-left:20px"><img src="/static/images/_avatar.png" width="50px"></div>');
-		}else if(msg.cls=='message-in'){
-		html.push('<div style="float:left;margin-right:20px"><img src="/static/images/kfl.png" width="50px"></div>');
-		}
+	if (msg.cls=='message-out') {
+	    html.push('<div style="float:right;margin-left:20px"><img src="/static/images/_avatar.png" width="50px"></div>');
+	} else if (msg.cls=='message-in') {
+	    html.push('<div style="float:left;margin-right:20px"><img src="/static/images/kfl.png" width="50px"></div>');
+	}
         html.push('    <div class="message ' + msg.cls + '">');
         html.push('        <div class="bubble"><p class="pre">' + msg.text + '</p>');
         html.push('           <span class="time">' + helper.toTime(msg.timestamp * 1000) + '</span>');
@@ -112,7 +112,10 @@ var htmlLoyout = {
 		html.push('<div style="float:left;margin-right:20px"><img src="/static/images/kfl.png" width="50px"></div>');
 		}
         html.push('    <div class="message ' + msg.cls + '">');
-        html.push('        <div class="bubble"><p class="pre">' + msg.goods.title + '</p>');
+	html.push('        <div class="bubble">');
+	html.push('<a href="'+msg.goods.url+'"><img src="'+msg.goods.image+'" width="150px" height="150px"></a>');
+	html.push('<p>'+msg.goods.title+'</p>');
+	html.push('<p>'+msg.goods.content+'</p>');
         html.push('           <span class="time">' + helper.toTime(msg.timestamp * 1000) + '</span>');
 
         if (msg.ack) {
