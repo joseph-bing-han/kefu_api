@@ -273,6 +273,31 @@ function translateText(text, obj) {
     });
 }
 
+
+function sendGoodsMessage(goods) {
+    if (goods.title && goods.image) {
+        var obj = {"goods":goods};
+        var now = new Date();
+        var content = JSON.stringify(obj);
+        var message = {
+            customerID: uid,
+            customerAppID: appID,
+            storeID: storeID,
+            sellerID: sellerID,
+            content: content,
+            contentObj: obj,
+            msgLocalID: msgLocalID++
+        };
+        message.outgoing = true;
+        message.timestamp = (now.getTime() / 1000);
+
+        if (im.connectState == IMService.STATE_CONNECTED) {
+            im.sendCustomerMessage(message);
+            addMessage(message);
+        }
+    }
+}
+
 $(document).ready(function () {
 
     var r = util.getURLParameter('store', location.search);
@@ -312,6 +337,36 @@ $(document).ready(function () {
     if (!token || !appID || !uid || !storeID) {
         return;
     }
+
+    var goods = {};
+    r = util.getURLParameter('goods_url', location.search);
+    if (r) {
+        goods.url = r;
+    } else {
+        goods.url = "";
+    }
+
+    r = util.getURLParameter('goods_image', location.search);
+    if (r) {
+        goods.image = r;
+    } else {
+        goods.image = "";
+    }
+
+    r = util.getURLParameter('goods_desc', location.search);
+    if (r) {
+        goods.content = r;
+    } else {
+        goods.content = "";
+    }
+
+    r = util.getURLParameter('goods_title', location.search);
+    if (r) {
+        goods.title = r;
+    } else {
+        goods.title = "";
+    }
+
 
     if (host) {
         im.host = host;
@@ -382,10 +437,11 @@ $(document).ready(function () {
         success: function (result, status, xhr) {
             console.log("messges:", result);
             if (!result) {
+                sendGoodsMessage(goods);
                 return;
             }
             msgs = result.data
-
+            var latest = null;
             for (var i = 0; i < msgs.length; i++) {
                 var msg = {};
                 var m = msgs[i];
@@ -411,6 +467,19 @@ $(document).ready(function () {
                     msg.msgLocalID = msgLocalID++;
                     observer.handleCustomerSupportMessage(msg);
                 }
+
+                if (msg.contentObj.goods) {
+                    latest = msg;
+                }
+            }
+
+            var now = new Date();
+            var n = (now.getTime() / 1000);
+            console.log("msg:", latest);
+            if (!latest || latest.contentObj.goods.title != goods.title || 
+                n - latest.timestamp > 10*60) {
+                console.log("send goods message");
+                sendGoodsMessage(goods);
             }
         },
         error: function (xhr, err) {
