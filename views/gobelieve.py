@@ -6,9 +6,12 @@ import json
 import logging
 import config
 
-def login_gobelieve(uid, uname, appid, appsecret):
+def login_gobelieve(uid, uname, appid, appsecret, device_id = '', platform = ''):
     url = config.GOBELIEVE_URL + "/auth/grant"
     obj = {"uid":uid, "user_name":uname}
+    if device_id and platform:
+        obj["device_id"] = device_id
+        obj["platform_id"] = platform
 
     m = md5.new(appsecret)
     secret = m.hexdigest()

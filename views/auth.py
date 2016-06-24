@@ -54,6 +54,9 @@ def access_token():
     username = obj["username"]
     password = obj["password"]
 
+    platform = obj.get('platform')
+    device_id = obj.get('device_id', '')
+
     if not username or not password:
         return INVALID_PARAM()
 
@@ -81,7 +84,7 @@ def access_token():
     if not uid:
         return INVALID_USER()
 
-    access_token = login_gobelieve(uid, "", config.APP_ID, config.APP_SECRET)
+    access_token = login_gobelieve(uid, "", config.APP_ID, config.APP_SECRET, device_id, platform)
         
     if not access_token:
         return CAN_NOT_GET_TOKEN()
