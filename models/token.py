@@ -75,14 +75,15 @@ class RefreshToken(object):
         m = {
             "token_type":self.token_type,
             "user_id":self.user_id,
-            "store_id":self.store_id
+            "store_id":self.store_id,
+            "access_token":self.access_token,
         }
         pipe.hmset(key, m)
         pipe.execute()
 
 
     def _load(self, rds, key):
-        t = rds.hmget(key, "token_type", "user_id", "store_id")
-        self.token_type, self.user_id, self.store_id = t
+        t = rds.hmget(key, "token_type", "user_id", "store_id", "access_token")
+        self.token_type, self.user_id, self.store_id, self.access_token = t
         return True if self.user_id else False
 
