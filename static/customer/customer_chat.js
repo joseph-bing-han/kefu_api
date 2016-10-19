@@ -120,63 +120,25 @@ var process = {
     },
     msgACK: function (msgID) {
         node.chatHistory.find('li[data-id="' + msgID + '"] .bubble').append(htmlLoyout.buildACK());
-    },
-    loadHistory: function () {
-        var MSG_CUSTOMER = 24;
-        var MSG_CUSTOMER_SUPPORT = 25;
-
-        var url = apiURL + "/messages?store=" + storeID;
-        $.ajax({
-            url: url,
-            dataType: 'json',
-            headers: {"Authorization": "Bearer " + token},
-            success: function (result, status, xhr) {
-                console.log("messges:", result);
-                if (!result) {
-                    return;
-                }
-                var msgs = result.data;
-                var latest = null;
-                for (var i = 0; i < msgs.length; i++) {
-                    var msg = {};
-                    var m = msgs[i];
-                    console.log("msg command:", m['command']);
-
-                    if (m['command'] == MSG_CUSTOMER) {
-                        msg.content = m['content'];
-                        msg.customerAppID = m['customer_appid'];
-                        msg.customerID = m['customer_id'];
-                        msg.storeID = m['store_id'];
-                        msg.sellerID = m['seller_id'];
-                        msg.timestamp = m['timestamp'];
-                        msg.msgLocalID = msgLocalID++;
-                        observer.handleCustomerMessage(msg);
-                        observer.handleCustomerMessageACK(msg);
-                    } else if (m['command'] == MSG_CUSTOMER_SUPPORT) {
-                        msg.content = m['content'];
-                        msg.customerAppID = m['customer_appid'];
-                        msg.customerID = m['customer_id'];
-                        msg.storeID = m['store_id'];
-                        msg.sellerID = m['seller_id'];
-                        msg.timestamp = m['timestamp'];
-                        msg.msgLocalID = msgLocalID++;
-                        observer.handleCustomerSupportMessage(msg);
-                    }
-                    if (msg.contentObj.goods) {
-                        latest = msg;
-                    }
-                }
-            },
-            error: function (xhr, err) {
-                console.log("get customer name err:", err, xhr.status);
-            }
-        });
     }
 };
 
 function scrollDown() {
-    $('#chatHistory .chat-scroll').scrollTop($('#chatHistory .chat-scroll ul').outerHeight());
+    $(document.body).scrollTop($(document.body).outerHeight());
     $("#entry").text('').focus();
+}
+function checkGoBottom() {
+    if ($(window).scrollTop() + $(window).height() > $(document).height() - 300) {
+        scrollDown();
+    } else {
+        var newTip = $('#new_tip');
+        if (!newTip.hasClass('show')) {
+            newTip.addClass('show');
+            setTimeout(function () {
+                newTip.removeClass('show');
+            }, 3000)
+        }
+    }
 }
 
 function appendMessage(msg) {
@@ -206,12 +168,6 @@ function appendMessage(msg) {
     }
 }
 
-// add message on board
-function addMessage(msg) {
-    appendMessage(msg);
-    scrollDown();
-}
-
 observer = {
     handleCustomerMessage: function (msg) {
         if (msg.customerID != uid || msg.customerAppID != appID) {
@@ -227,9 +183,9 @@ observer = {
         sellerID = msg.sellerID;
         msg.outgoing = true;
         msg.msgLocalID = msgLocalID++;
-        addMessage(msg);
+        appendMessage(msg);
     },
-    handleCustomerSupportMessage: function (msg) {
+    handleCustomerSupportMessage: function (msg, hideTip) {
         if (msg.customerID != uid || msg.customerAppID != appID) {
             return;
         }
@@ -243,7 +199,11 @@ observer = {
         sellerID = msg.sellerID;
         msg.outgoing = false;
         msg.msgLocalID = msgLocalID++;
-        addMessage(msg)
+        console.log('sssssll 收到消息');
+        appendMessage(msg);
+        if (!hideTip) {
+            checkGoBottom();
+        }
     },
     handleCustomerMessageACK: function (msg) {
         console.log("handleCustomerMessageACK...");
@@ -334,8 +294,9 @@ $(document).ready(function () {
             if (im.connectState == IMService.STATE_CONNECTED) {
                 im.sendCustomerMessage(message);
                 $("#entry").val("");
-                addMessage(message);
+                appendMessage(message);
             }
+            scrollDown();
         }
     }
 
@@ -387,7 +348,7 @@ $(document).ready(function () {
                     msg.sellerID = m['seller_id'];
                     msg.timestamp = m['timestamp'];
                     msg.msgLocalID = msgLocalID++;
-                    observer.handleCustomerSupportMessage(msg);
+                    observer.handleCustomerSupportMessage(msg, true);
                 }
             }
             setTimeout(function () {
@@ -398,18 +359,14 @@ $(document).ready(function () {
             console.log("get customer name err:", err, xhr.status);
         }
     });
-    // process.loadHistory();///加载历史记录
 
     $('#chatHistory').on('click', '.image-thumb-body', function () {
         var _this = $(this);
         var src = _this.attr('src');
-        console.log(src);
-        $(document.body).append('<div class="open-img-wrap"><img src="'+src+'" class="open-img" /></div>')
+        $(document.body).append('<div class="open-img-wrap"><img src="' + src + '" class="open-img" /></div>')
     });
-    $(document.body).on('click','.open-img-wrap',function(){
+    $(document.body).on('click', '.open-img-wrap', function () {
         $(this).remove();
-    })
-
-
+    });
 
 });
