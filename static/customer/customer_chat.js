@@ -373,7 +373,8 @@ $(document).ready(function () {
 
     $(window).on('unload',function () {
         console.log('unload');
-        im.stop()
+        im.stop();
+        return false
     });
 
 });
