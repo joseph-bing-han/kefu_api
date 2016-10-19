@@ -63,9 +63,9 @@ var htmlLoyout = {
     buildImage: function (msg) {
         var html = [];
         html.push('<li class="chat-item"  data-id="' + msg.id + '">');
-        html.push('    <div class="message">');
-        html.push('        <div class="bubble"><p class="pre"><a href="' + msg.image + '" target="_blank">' +
-            '<img class="image-thumb-body" src="' + msg.image + '" /></p></a>');
+        html.push('    <div class="message ' + msg.cls + '">');
+        html.push('        <div class="bubble">' +
+            '<img class="image-thumb-body" src="' + msg.image + '" /><br /><br />');
         html.push('           <span class="time">' + helper.toTime(msg.timestamp * 1000) + '</span>');
 
         if (msg.ack) {
@@ -313,8 +313,8 @@ $(document).ready(function () {
     im.accessToken = token
     im.start();
 
-    function sendMsg(){
-         var msg = $("#entry").val().replace("\n", "");
+    function sendMsg() {
+        var msg = $("#entry").val().replace("\n", "");
         if (!util.isBlank(msg)) {
             var now = new Date();
             var obj = {"text": msg};
@@ -338,7 +338,8 @@ $(document).ready(function () {
             }
         }
     }
-    $('#chat_button').on('click',function(){
+
+    $('#chat_button').on('click', function () {
         sendMsg();
     });
 
@@ -368,7 +369,6 @@ $(document).ready(function () {
                 var msg = {};
                 var m = msgs[i];
                 console.log("msg command:", m['command']);
-
                 if (m['command'] == MSG_CUSTOMER) {
                     msg.content = m['content'];
                     msg.customerAppID = m['customer_appid'];
@@ -390,11 +390,26 @@ $(document).ready(function () {
                     observer.handleCustomerSupportMessage(msg);
                 }
             }
+            setTimeout(function () {
+                scrollDown();
+            }, 500)
         },
         error: function (xhr, err) {
             console.log("get customer name err:", err, xhr.status);
         }
     });
     // process.loadHistory();///加载历史记录
+
+    $('#chatHistory').on('click', '.image-thumb-body', function () {
+        var _this = $(this);
+        var src = _this.attr('src');
+        console.log(src);
+        $(document.body).append('<div class="open-img-wrap"><img src="'+src+'" class="open-img" /></div>')
+    });
+    $(document.body).on('click','.open-img-wrap',function(){
+        $(this).remove();
+    })
+
+
 
 });

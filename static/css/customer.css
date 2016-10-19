@@ -202,7 +202,6 @@ ul, ol, li {
     /*border-right: 1px solid #efefef;*/
 }
 
-
 .chat-list .chat-wrap {
     -webkit-box-flex: 1;
     -ms-flex: 1 1 0;
@@ -220,7 +219,8 @@ ul, ol, li {
 .chat-list .chat-wrap {
 
 }
-.chat-list .chat-wrap .chat-scroll{
+
+.chat-list .chat-wrap .chat-scroll {
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -237,6 +237,7 @@ ul, ol, li {
     position: absolute;
     padding: 17px 9% 8px;
 }
+
 .chat-list .chat-wrap .pane-chat-empty {
     -webkit-box-flex: 1;
     -ms-flex: 1 1 auto;
@@ -302,7 +303,8 @@ ul, ol, li {
     -ms-flex: none;
     flex: none;
     -webkit-transition: -webkit-filter .16s linear;
-    max-width: 300px;
+    width: 180px
+    /*max-width: 50%;*/
 }
 
 .chat-list .message .bubble p.pre {
@@ -474,6 +476,28 @@ ul, ol, li {
 .btn-download:hover {
     background-color: #eee;
     text-decoration: none;
+}
+
+.open-img-wrap {
+    position: absolute;
+    width: 100%;
+    height:100%;
+    overflow-y: scroll;
+    z-index:100000;
+    top: 0;
+    left:0;
+    background-color: rgba(0, 0, 0, .3);
+    display: flex;
+}
+
+.open-img {
+    width: 100%;
+    flex: 1;
+    align-self: center;
+    vertical-align: middle;
+    margin:0;
+    padding:0;
+
 }
 
 /*# sourceMappingURL=style.css.map */
