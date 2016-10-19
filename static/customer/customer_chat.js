@@ -1,7 +1,6 @@
 var msgLocalID = 0;
 
 var sellerID = 0;
-var storeID = 0;
 var appID = 0;
 var uid = 0;
 var token = "";
@@ -314,11 +313,8 @@ $(document).ready(function () {
     im.accessToken = token
     im.start();
 
-    $("#entry").keypress(function (e) {
-        if (e.keyCode != 13) return;
-        e.stopPropagation();
-        e.preventDefault();
-        var msg = $("#entry").val().replace("\n", "");
+    function sendMsg(){
+         var msg = $("#entry").val().replace("\n", "");
         if (!util.isBlank(msg)) {
             var now = new Date();
             var obj = {"text": msg};
@@ -341,6 +337,16 @@ $(document).ready(function () {
                 addMessage(message);
             }
         }
+    }
+    $('#chat_button').on('click',function(){
+        sendMsg();
+    });
+
+    $("#entry").keypress(function (e) {
+        if (e.keyCode != 13) return;
+        e.stopPropagation();
+        e.preventDefault();
+        sendMsg()
     });
 
     var MSG_CUSTOMER = 24;
@@ -388,7 +394,7 @@ $(document).ready(function () {
         error: function (xhr, err) {
             console.log("get customer name err:", err, xhr.status);
         }
-   });
+    });
     // process.loadHistory();///加载历史记录
 
 });

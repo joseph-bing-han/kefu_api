@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import requests
 from flask import request, Blueprint, g, session, redirect
 from flask import render_template_string, render_template
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -38,11 +39,12 @@ def index():
         uid = request.cookies.get('uid')
         uid = int(uid)
         seller = Seller.get_seller(g._db, uid)
-        return render_template('customer_support/chat.html', host=config.HOST, name=seller['name'], apiURL=config.APIURL)
+        return render_template('customer_support/chat.html', host=config.HOST, name=seller['name'],
+                               apiURL=config.APIURL)
     else:
         return render_template('customer_support/index.html')
 
-    
+
 @app.route("/login", methods=["POST"])
 def login():
     username = request.form.get('username')
@@ -51,8 +53,7 @@ def login():
         return render_template_string(error_html, error="用户名称为空")
     if not password:
         return render_template_string(error_html, error="密码为空")
-    
-    
+
     password_md5 = md5.new(password).hexdigest()
     db = g._db
 
@@ -72,7 +73,7 @@ def login():
                 store_id = seller['store_id']
         except ValueError:
             pass
-            
+
     if not uid:
         return render_template_string(error_html, error="非法的用户名/密码")
 
@@ -80,7 +81,7 @@ def login():
     if not name:
         name = ""
     access_token = login_gobelieve(uid, name, config.APP_ID, config.APP_SECRET)
-        
+
     if not access_token:
         return render_template_string(error_html, error="登录失败")
 
@@ -90,6 +91,7 @@ def login():
     response.set_cookie('store_id', str(seller['store_id']))
     response.set_cookie('uid', str(seller['id']))
     return response
+
 
 @app.route("/chat/pc/index.html")
 def chat():
@@ -106,18 +108,47 @@ def chat():
         name = s['name']
     else:
         name = ""
-    
-    if uid and appid and token:
-        return render_template("customer/chat.html", host=config.HOST, customerAppID=int(appid), customerID=int(uid), customerToken=token, name=name, apiURL=config.APIURL)
 
-    #生成临时用户
+    if uid and appid and token:
+        return render_template("customer/chat.html", host=config.HOST, customerAppID=int(appid), customerID=int(uid),
+                               customerToken=token, name=name, apiURL=config.APIURL)
+
+    # 生成临时用户
     rds = g.rds
     key = "anonymous_id"
     uid = rds.incr(key)
     appid = config.ANONYMOUS_APP_ID
-    token = login_gobelieve(uid, username, config.ANONYMOUS_APP_ID, config.ANONYMOUS_APP_SECRET,device_id=device_id)
-    return render_template("customer/chat.html", host=config.HOST, customerAppID=appid, customerID=uid, customerToken=token, name=name, apiURL=config.APIURL)
+    token = login_gobelieve(uid, username, config.ANONYMOUS_APP_ID, config.ANONYMOUS_APP_SECRET, device_id=device_id)
+    return render_template("customer/chat.html", host=config.HOST, customerAppID=appid, customerID=uid,
+                           customerToken=token, name=name, apiURL=config.APIURL)
 
+
+@app.route("/chat/index.html")
+def chat_page():
+    uid = request.args.get('uid')
+    appid = request.args.get('appid')
+    app_name = request.args.get('app_name', '')
+    user_name = request.args.get('user_name', '')
+    if not appid or not uid or not user_name:
+        return render_template_string(error_html, error="appid、uid、user_name 为必填参数")
+
+    data = {
+        "appid": int(appid),
+        "uid": int(uid),
+        "user_name": user_name,
+    }
+    print data
+
+    r = requests.post('http://api.gobelieve.io/auth/customer', data=json.dumps(data))
+    if r.status_code != 200:
+        return render_template_string(error_html, error="获取权限失败")
+
+    res = json.loads(r.content)
+
+    if uid and appid and res['data']['token']:
+        return render_template("customer/chat.html", host=config.HOST, customerAppID=int(appid), customerID=int(uid),
+                               customerToken=res['data']['token'], store_id=res['data']['store_id'], name=app_name,
+                               apiURL=config.APIURL)
 
 
 @app.route("/chat/pc/conversation.html")
@@ -136,12 +167,11 @@ def chat_conversation():
 def get_store(store_id):
     s = Store.get_store(g._db, store_id)
     obj = {
-        "store_id":store_id,
-        "name":''
+        "store_id": store_id,
+        "name": ''
     }
 
     if s:
         obj['name'] = s['name']
-    
+
     return make_response(200, obj)
-        
