@@ -175,7 +175,7 @@ var process = {
 };
 
 function scrollDown() {
-    $('#chatHistory').scrollTop($('#chatHistory ul').outerHeight());
+    $('#chatHistory .chat-scroll').scrollTop($('#chatHistory .chat-scroll ul').outerHeight());
     $("#entry").text('').focus();
 }
 
