@@ -14,6 +14,7 @@ html, body {
 
 html, body {
     /*height: 100%;*/
+    /*overflow: hidden;*/
     /*overflow: auto;*/
 }
 
@@ -76,17 +77,19 @@ ul, ol, li {
 }
 
 .chat-list {
+    /*height:100%;*/
+    /*overflow-y: scroll;*/
 }
 
 .chat-list .chat-wrap {
     /*position: absolute;*/
-    right: 0;
-    bottom: 0;
-    left: 0;
-    width: 100%;
+    /*right: 0;*/
+    /*bottom: 0;*/
+    /*left: 0;*/
+    /*width: 100%;*/
     box-sizing: border-box;
-    height: auto;
-    max-height: 100%;
+    /*height: auto;*/
+    /*max-height: 100%;*/
     overflow-x: hidden;
     overflow-y: auto;
     word-wrap: break-word;
