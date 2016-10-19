@@ -199,7 +199,6 @@ observer = {
         sellerID = msg.sellerID;
         msg.outgoing = false;
         msg.msgLocalID = msgLocalID++;
-        console.log('sssssll 收到消息');
         appendMessage(msg);
         if (!hideTip) {
             checkGoBottom();
