@@ -61,6 +61,7 @@ var htmlLoyout = {
         return html.join('');
     },
     buildImage: function (msg) {
+        console.log('msg====',msg)
         var html = [];
         html.push('<li class="chat-item"  data-id="' + msg.id + '">');
         html.push('    <div class="message ' + msg.cls + '">');
@@ -101,8 +102,10 @@ var htmlLoyout = {
     },
 };
 
-var node = {
+var dom = {
+
     chatHistory: $("#chatHistory ul"),
+    entry: $("#entry")
 };
 
 var process = {
@@ -110,16 +113,16 @@ var process = {
 
     },
     appendAudio: function (m) {
-        node.chatHistory.append(htmlLoyout.buildAudio(m));
+        dom.chatHistory.append(htmlLoyout.buildAudio(m));
     },
     appendText: function (m) {
-        node.chatHistory.append(htmlLoyout.buildText(m));
+        dom.chatHistory.append(htmlLoyout.buildText(m));
     },
     appendImage: function (m) {
-        node.chatHistory.append(htmlLoyout.buildImage(m));
+        dom.chatHistory.append(htmlLoyout.buildImage(m));
     },
     msgACK: function (msgID) {
-        node.chatHistory.find('li[data-id="' + msgID + '"] .bubble').append(htmlLoyout.buildACK());
+        dom.chatHistory.find('li[data-id="' + msgID + '"] .bubble').append(htmlLoyout.buildACK());
     }
 };
 
@@ -303,7 +306,7 @@ $(document).ready(function () {
         sendMsg();
     });
 
-    $("#entry").keypress(function (e) {
+    dom.entry.keypress(function (e) {
         if (e.keyCode != 13) return;
         e.stopPropagation();
         e.preventDefault();
@@ -368,7 +371,8 @@ $(document).ready(function () {
         $(this).remove();
     });
 
-    $(window).unload(function () {
+    $(window).on('unload',function () {
+        console.log('unload');
         im.stop()
     });
 
