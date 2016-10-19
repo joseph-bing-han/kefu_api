@@ -97,10 +97,10 @@ def chat():
     uid = request.args.get('uid')
     appid = request.args.get('appid')
     token = request.args.get('token')
-
+    username = request.args.get('name', '')
+    device_id = request.args.get('device_id', '')
     if not store:
         return render_template_string(error_html, error="未指定商店id")
-    
     s = Store.get_store(g._db, int(store))
     if s:
         name = s['name']
@@ -115,7 +115,7 @@ def chat():
     key = "anonymous_id"
     uid = rds.incr(key)
     appid = config.ANONYMOUS_APP_ID
-    token = login_gobelieve(uid, "", config.ANONYMOUS_APP_ID, config.ANONYMOUS_APP_SECRET)
+    token = login_gobelieve(uid, username, config.ANONYMOUS_APP_ID, config.ANONYMOUS_APP_SECRET,device_id=device_id)
     return render_template("customer/chat.html", host=config.HOST, customerAppID=appid, customerID=uid, customerToken=token, name=name, apiURL=config.APIURL)
 
 
@@ -125,7 +125,7 @@ def chat_conversation():
     uid = request.args.get('uid')
     appid = request.args.get('appid')
     token = request.args.get('token')
-    
+
     if uid and appid and token:
         return render_template("customer/conversation.html", host=config.HOST, apiURL=config.APIURL)
     else:

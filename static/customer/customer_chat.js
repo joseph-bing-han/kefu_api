@@ -4,6 +4,7 @@ var sellerID = 0;
 var storeID = 0;
 var appID = 0;
 var uid = 0;
+var token = "";
 
 String.format = function () {
     if (arguments.length == 0)
@@ -121,6 +122,57 @@ var process = {
     msgACK: function (msgID) {
         node.chatHistory.find('li[data-id="' + msgID + '"] .bubble').append(htmlLoyout.buildACK());
     },
+    loadHistory: function () {
+        var MSG_CUSTOMER = 24;
+        var MSG_CUSTOMER_SUPPORT = 25;
+
+        var url = apiURL + "/messages?store=" + storeID;
+        $.ajax({
+            url: url,
+            dataType: 'json',
+            headers: {"Authorization": "Bearer " + token},
+            success: function (result, status, xhr) {
+                console.log("messges:", result);
+                if (!result) {
+                    return;
+                }
+                var msgs = result.data;
+                var latest = null;
+                for (var i = 0; i < msgs.length; i++) {
+                    var msg = {};
+                    var m = msgs[i];
+                    console.log("msg command:", m['command']);
+
+                    if (m['command'] == MSG_CUSTOMER) {
+                        msg.content = m['content'];
+                        msg.customerAppID = m['customer_appid'];
+                        msg.customerID = m['customer_id'];
+                        msg.storeID = m['store_id'];
+                        msg.sellerID = m['seller_id'];
+                        msg.timestamp = m['timestamp'];
+                        msg.msgLocalID = msgLocalID++;
+                        observer.handleCustomerMessage(msg);
+                        observer.handleCustomerMessageACK(msg);
+                    } else if (m['command'] == MSG_CUSTOMER_SUPPORT) {
+                        msg.content = m['content'];
+                        msg.customerAppID = m['customer_appid'];
+                        msg.customerID = m['customer_id'];
+                        msg.storeID = m['store_id'];
+                        msg.sellerID = m['seller_id'];
+                        msg.timestamp = m['timestamp'];
+                        msg.msgLocalID = msgLocalID++;
+                        observer.handleCustomerSupportMessage(msg);
+                    }
+                    if (msg.contentObj.goods) {
+                        latest = msg;
+                    }
+                }
+            },
+            error: function (xhr, err) {
+                console.log("get customer name err:", err, xhr.status);
+            }
+        });
+    }
 };
 
 function scrollDown() {
@@ -239,7 +291,7 @@ $(document).ready(function () {
         appID = customerAppID;
     }
 
-    var token = "";
+    token = "";
     r = util.getURLParameter('token', location.search);
     if (r) {
         token = r;
@@ -294,7 +346,7 @@ $(document).ready(function () {
     var MSG_CUSTOMER = 24;
     var MSG_CUSTOMER_SUPPORT = 25;
 
-    var url =  apiURL + "/messages?store="+storeID;
+    var url = apiURL + "/messages?store=" + storeID;
     $.ajax({
         url: url,
         dataType: 'json',
@@ -304,7 +356,7 @@ $(document).ready(function () {
             if (!result) {
                 return;
             }
-            msgs = result.data
+            var msgs = result.data
 
             for (var i = 0; i < msgs.length; i++) {
                 var msg = {};
@@ -336,7 +388,7 @@ $(document).ready(function () {
         error: function (xhr, err) {
             console.log("get customer name err:", err, xhr.status);
         }
-    });
-
+   });
+    // process.loadHistory();///加载历史记录
 
 });
