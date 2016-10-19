@@ -368,4 +368,8 @@ $(document).ready(function () {
         $(this).remove();
     });
 
+    $(window).unload(function () {
+        im.stop()
+    });
+
 });
