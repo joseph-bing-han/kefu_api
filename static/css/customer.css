@@ -2,15 +2,20 @@ body {
     background-color: #ddd;
     font-size: 1em;
     position: relative;
-    margin:0;
-    padding:0;
+    margin: 0;
+    padding: 0;
 }
-html,body{
+
+html, body {
     /*-webkit-overflow-scrolling : touch !important;*/
     /*overflow: auto !important;*/
     /*height: 100% !important;*/
 }
 
+html, body {
+    /*height: 100%;*/
+    /*overflow: auto;*/
+}
 
 body ::-webkit-scrollbar-thumb {
     background-color: rgba(0, 0, 0, 0.2);
@@ -125,10 +130,10 @@ ul, ol, li {
 }
 
 .chat-list .message {
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
+    /*-webkit-user-select: none;*/
+    /*-moz-user-select: none;*/
+    /*-ms-user-select: none;*/
+    /*user-select: none;*/
 }
 
 .chat-list .message .bubble {
@@ -219,8 +224,9 @@ ul, ol, li {
     padding-right: 110px;
     height: 60px;
 }
+
 /*.fix-fixed{*/
-    /*position: absolute!important;*/
+/*position: absolute!important;*/
 /*}*/
 
 .pane-chat-footer .chat-input {
@@ -333,7 +339,8 @@ ul, ol, li {
     transition: all 0.5s ease-out;
     opacity: 0;
 }
-.new-tip.show{
+
+.new-tip.show {
     opacity: 1;
 }
 

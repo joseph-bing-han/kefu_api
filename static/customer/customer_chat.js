@@ -128,7 +128,6 @@ var process = {
 
 function scrollDown() {
     $(document.body).scrollTop($(document.body).outerHeight());
-    $("#entry").text('').focus();
 }
 function checkGoBottom() {
     if ($(window).scrollTop() + $(window).height() > $(document).height() - 300) {
@@ -295,7 +294,7 @@ $(document).ready(function () {
 
             if (im.connectState == IMService.STATE_CONNECTED) {
                 im.sendCustomerMessage(message);
-                $("#entry").val("");
+                $("#entry").val("").blur();
                 appendMessage(message);
             }
             scrollDown();
@@ -306,11 +305,15 @@ $(document).ready(function () {
         sendMsg();
     });
 
+
     dom.entry.keypress(function (e) {
         if (e.keyCode != 13) return;
         e.stopPropagation();
         e.preventDefault();
         sendMsg()
+    });
+    dom.entry.on('touchstart',function(){
+        scrollDown();
     });
 
     var MSG_CUSTOMER = 24;
