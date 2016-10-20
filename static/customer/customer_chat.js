@@ -61,7 +61,7 @@ var htmlLoyout = {
         return html.join('');
     },
     buildImage: function (msg) {
-        console.log('msg====',msg)
+        console.log('msg====', msg)
         var html = [];
         html.push('<li class="chat-item"  data-id="' + msg.id + '">');
         html.push('    <div class="message ' + msg.cls + '">');
@@ -202,9 +202,11 @@ observer = {
         msg.outgoing = false;
         msg.msgLocalID = msgLocalID++;
         appendMessage(msg);
-        if (!hideTip) {
+        if (!hideTip) { //非首次加载
             checkGoBottom();
+            window.localStorage.setItem('lastMsg', window.JSON.stringify(msg));
         }
+
     },
     handleCustomerMessageACK: function (msg) {
         console.log("handleCustomerMessageACK...");
@@ -312,7 +314,7 @@ $(document).ready(function () {
         e.preventDefault();
         sendMsg()
     });
-    dom.entry.on('touchstart',function(){
+    dom.entry.on('touchstart', function () {
         scrollDown();
     });
 
@@ -374,7 +376,15 @@ $(document).ready(function () {
         $(this).remove();
     });
 
-    $(window).on('unload',function () {
+    var lastMsg = window.localStorage.getItem('lastMsg');
+    if (lastMsg) {
+        lastMsg = window.JSON.parse(lastMsg);
+        alert(window.JSON.parse(lastMsg.content)['text']);
+
+    }
+
+
+    $(window).on('unload', function () {
         console.log('unload');
         im.stop();
         return false
