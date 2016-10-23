@@ -125,30 +125,37 @@ def chat():
 
 @app.route("/chat/index.html")
 def chat_page():
-    uid = request.args.get('uid')
     appid = request.args.get('appid')
+    appkey = request.args.get('appkey')
+    uid = request.args.get('uid', '')
     app_name = request.args.get('app_name', '')
     user_name = request.args.get('user_name', '')
-    if not appid or not uid or not user_name:
-        return render_template_string(error_html, error="appid、uid、user_name 为必填参数")
+    if not appid or not appkey or not user_name:
+        return render_template_string(error_html, error="appid、appkey、uid、user_name 为必填参数")
 
     data = {
         "appid": int(appid),
-        "uid": int(uid),
+        "uid": uid,
         "user_name": user_name,
     }
-    print data
-
-    r = requests.post('http://api.gobelieve.io/auth/customer', data=json.dumps(data))
+    
+    basic = base64.b64encode("%s:%s"%(appid, appkey))
+    headers = {'Content-Type': 'application/json; charset=UTF-8',
+               'Authorization': 'Basic ' + basic}
+    url = config.GOBELIEVE_URL + "/customer/register"
+    r = requests.post(url, headers=headers, data=json.dumps(data))
     if r.status_code != 200:
         return render_template_string(error_html, error="获取权限失败")
 
     res = json.loads(r.content)
+    client_id = res['data']['client_id']
+    store_id = res['data']['store_id']
+    token = res['data']['token']
 
-    if uid and appid and res['data']['token']:
-        return render_template("customer/chat.html", host=config.HOST, customerAppID=int(appid), customerID=int(uid),
-                               customerToken=res['data']['token'], store_id=res['data']['store_id'], name=app_name,
-                               apiURL=config.APIURL)
+    return render_template("customer/chat.html", host=config.HOST, 
+                           customerAppID=int(appid), customerID=int(uid),
+                           customerToken=token, store_id=store_id,
+                           name=app_name, apiURL=config.APIURL)
 
 
 @app.route("/chat/pc/conversation.html")
