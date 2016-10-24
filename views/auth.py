@@ -84,7 +84,7 @@ def access_token():
     if not uid:
         return INVALID_USER()
 
-    access_token = login_gobelieve(uid, "", config.APP_ID, config.APP_SECRET, device_id, platform)
+    access_token = login_gobelieve(uid, seller['name'], config.APP_ID, config.APP_SECRET, device_id, platform)
         
     if not access_token:
         return CAN_NOT_GET_TOKEN()

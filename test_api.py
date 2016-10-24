@@ -54,8 +54,3 @@ url = URL + "/customers/%s/%s"%(7, 1)
 r = requests.get(url, headers=headers)
 print r.content
 
-
-url = URL + "/messages"
-params = {"limit":10}
-r = requests.get(url, headers=headers, params=params)
-print r.text
