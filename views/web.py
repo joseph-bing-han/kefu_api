@@ -151,9 +151,10 @@ def chat_page():
     client_id = res['data']['client_id']
     store_id = res['data']['store_id']
     token = res['data']['token']
+    print res['data']
 
     return render_template("customer/chat.html", host=config.HOST, 
-                           customerAppID=int(appid), customerID=int(uid),
+                           customerAppID=int(appid), customerID=int(client_id),
                            customerToken=token, store_id=store_id,
                            name=app_name, apiURL=config.APIURL)
 

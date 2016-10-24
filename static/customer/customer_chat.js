@@ -240,10 +240,10 @@ $(document).ready(function () {
     }
 
     r = util.getURLParameter('uid', location.search);
-    if (r) {
-        uid = parseInt(r);
-    } else if (customerID) {
+    if (customerID) {
         uid = customerID;
+    } else if (r) {
+        uid = parseInt(r);
     }
 
     r = util.getURLParameter('appid', location.search);
@@ -293,6 +293,7 @@ $(document).ready(function () {
             };
             message.outgoing = true;
             message.timestamp = (now.getTime() / 1000);
+            console.log(message);
 
             if (im.connectState == IMService.STATE_CONNECTED) {
                 im.sendCustomerMessage(message);
