@@ -9,17 +9,18 @@ import json
 import time
 from libs.util import make_json_response
 from libs.response_meta import ResponseMeta
+from authorization import require_auth
 from models.user import User
 
 
-app = Blueprint('user', __name__)
+app = Blueprint('push', __name__)
 
 
 @app.route("/push/bind", methods=["POST"])
 @require_auth
 def bind_device_token():
     rds = g.imrds
-    appid = request.appid
+    appid = config.APP_ID
     uid = request.uid
     obj = json.loads(request.data)
     device_token = obj["apns_device_token"] if obj.has_key("apns_device_token") else ""
@@ -48,7 +49,7 @@ def bind_device_token():
 @require_auth
 def unbind_device_token():
     rds = g.imrds
-    appid = request.appid
+    appid = config.APP_ID
     uid = request.uid
     obj = json.loads(request.data)
     device_token = obj["apns_device_token"] if obj.has_key("apns_device_token") else ""

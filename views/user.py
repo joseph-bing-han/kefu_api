@@ -5,7 +5,7 @@ import logging
 import json
 from libs.util import make_json_response
 from authorization import require_auth
-from models import Supporter
+from models.supporter import Supporter
 
 app = Blueprint('user', __name__)
 

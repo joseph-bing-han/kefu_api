@@ -12,6 +12,8 @@ import redis
 
 from views import auth
 from views import customer
+from views import user
+from views import push
 from libs.mysql import Mysql
 from libs.response_meta import ResponseMeta
 from libs.util import make_response
@@ -66,6 +68,8 @@ def init_app(app):
 
     app.register_blueprint(auth.app)
     app.register_blueprint(customer.app)
+    app.register_blueprint(user.app)
+    app.register_blueprint(push.app)
     if config.ENABLE_ROBOT:
         from views import robot
         app.register_blueprint(robot.app)

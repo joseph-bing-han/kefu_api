@@ -21,7 +21,8 @@ from gobelieve import login_gobelieve
 from gobelieve import send_sys_message
 from models import token
 from models.seller import Seller
-from models.Supporter import supporter
+from models.supporter import Supporter
+from models.user import User
 
 import config
 
@@ -56,7 +57,10 @@ def unregister():
     uid = request.uid
     store_id = request.store_id
 
-    obj = json.loads(request.data)
+    obj = {}
+    if request.data:
+        obj = json.loads(request.data)
+
     device_token = obj["apns_device_token"] if obj.has_key("apns_device_token") else ""
     ng_device_token = obj["ng_device_token"] if obj.has_key("ng_device_token") else ""
     xg_device_token = obj["xg_device_token"] if obj.has_key("xg_device_token") else ""
@@ -131,7 +135,7 @@ def access_token():
     t.save(rds)
 
     #用户上线
-    User.set_user_online(rds, uid)
+    Supporter.set_user_online(rds, uid)
 
     now = int(time.time())
     obj = {

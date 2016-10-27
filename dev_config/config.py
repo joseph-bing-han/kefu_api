@@ -24,7 +24,7 @@ MYSQL_DATABASE = "gobelieve"
 # host,port,user,password,db,auto_commit,charset
 MYSQL = (MYSQL_HOST, MYSQL_PORT, MYSQL_USER, MYSQL_PASSWD, MYSQL_DATABASE, MYSQL_AUTOCOMMIT, MYSQL_CHARSET)
 
-GOBELIEVE_URL = "http://127.0.0.1"
+GOBELIEVE_URL = "http://127.0.0.1:5000"
 
 #客服app配置
 APP_ID = 1453
