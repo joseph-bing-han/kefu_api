@@ -13,6 +13,7 @@ import redis
 from views import auth
 from views import customer
 from libs.mysql import Mysql
+from libs.response_meta import ResponseMeta
 from libs.util import make_response
 import config
 
@@ -28,6 +29,9 @@ def SERVER_INTERNAL_ERROR():
     e = {"error":"Server Internal Error!"}
     logging.error("server internal error")
     return make_response(500, e)
+
+def response_meta_handler(response_meta):
+    return response_meta.get_response()
 
 
 def generic_error_handler(err):
@@ -57,6 +61,7 @@ def app_teardown(exception):
 def init_app(app):
     app.teardown_appcontext(app_teardown)
     app.before_request(before_request)
+    app.register_error_handler(ResponseMeta, response_meta_handler)
     app.register_error_handler(Exception, generic_error_handler)
 
     app.register_blueprint(auth.app)
