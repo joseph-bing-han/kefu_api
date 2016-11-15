@@ -381,7 +381,7 @@ $(document).ready(function () {
     if (lastMsg) {
         lastMsg = window.JSON.parse(lastMsg);
         alert(window.JSON.parse(lastMsg.content)['text']);
-
+        window.localStorage.setItem('lastMsg', '');
     }
 
 
