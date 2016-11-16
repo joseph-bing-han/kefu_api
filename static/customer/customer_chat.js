@@ -184,7 +184,6 @@ observer = {
             return
         }
 
-        sellerID = msg.sellerID;
         msg.outgoing = true;
         msg.msgLocalID = msgLocalID++;
         appendMessage(msg);
@@ -200,7 +199,6 @@ observer = {
             return
         }
 
-        sellerID = msg.sellerID;
         msg.outgoing = false;
         msg.msgLocalID = msgLocalID++;
         appendMessage(msg);
@@ -232,95 +230,57 @@ observer = {
     }
 };
 
-var im = new IMService();
-im.observer = observer;
-
-$(document).ready(function () {
-    var r = util.getURLParameter('store', location.search);
-    if (r) {
-        storeID = parseInt(r);
-    }
-
-    r = util.getURLParameter('uid', location.search);
-    if (customerID) {
-        uid = customerID;
-    } else if (r) {
-        uid = parseInt(r);
-    }
-
-    r = util.getURLParameter('appid', location.search);
-    if (r) {
-        appID = parseInt(r);
-    } else if (customerAppID) {
-        appID = customerAppID;
-    }
-
-    token = "";
-    r = util.getURLParameter('token', location.search);
-    if (r) {
-        token = r;
-    } else if (customerToken) {
-        token = customerToken;
-    }
-    console.log("appid:", appID);
-    console.log("uid:", uid);
-    console.log("store id:", storeID);
-    console.log("token:" + token);
-
-
-    if (!token || !appID || !uid || !storeID) {
-        return;
-    }
-
-    if (host) {
-        im.host = host;
-    }
-    im.accessToken = token
-    im.start();
-
-    function sendMsg() {
-        var msg = $("#entry").val().replace("\n", "");
-        if (!util.isBlank(msg)) {
-            var now = new Date();
-            var obj = {"text": msg};
-            var textMsg = JSON.stringify(obj);
-            var message = {
-                customerID: uid,
-                customerAppID: appID,
-                storeID: storeID,
-                sellerID: sellerID,
-                content: textMsg,
-                contentObj: obj,
-                msgLocalID: msgLocalID++
-            };
-            message.outgoing = true;
-            message.timestamp = (now.getTime() / 1000);
-            console.log(message);
-
-            if (im.connectState == IMService.STATE_CONNECTED) {
-                im.sendCustomerMessage(message);
-                $("#entry").val("").blur();
-                appendMessage(message);
+function getSupporter() {
+    var url = apiURL + "/supporters?store_id=" + storeID;
+    $.ajax({
+        url: url,
+        dataType: 'json',
+        headers: {"Authorization": "Bearer " + token},
+        success: function (result, status, xhr) {
+            console.log("supporter:", result);
+            if (!result) {
+                return;
             }
-            scrollDown();
+            var supporter = result.data
+            sellerID = supporter['seller_id'];
+        },
+        error: function (xhr, err) {
+            console.log("get customer name err:", err, xhr.status);
         }
-    }
-
-    $('#chat_button').on('click', function () {
-        sendMsg();
     });
+    
+}
 
 
-    dom.entry.keypress(function (e) {
-        if (e.keyCode != 13) return;
-        e.stopPropagation();
-        e.preventDefault();
-        sendMsg()
-    });
-    dom.entry.on('touchstart', function () {
+function sendMsg() {
+    var msg = $("#entry").val().replace("\n", "");
+    if (!util.isBlank(msg)) {
+        var now = new Date();
+        var obj = {"text": msg};
+        var textMsg = JSON.stringify(obj);
+        var message = {
+            customerID: uid,
+            customerAppID: appID,
+            storeID: storeID,
+            sellerID: sellerID,
+            content: textMsg,
+            contentObj: obj,
+            msgLocalID: msgLocalID++
+        };
+        message.outgoing = true;
+        message.timestamp = (now.getTime() / 1000);
+        console.log(message);
+
+        if (im.connectState == IMService.STATE_CONNECTED) {
+            im.sendCustomerMessage(message);
+            $("#entry").val("").blur();
+            appendMessage(message);
+        }
         scrollDown();
-    });
+    }
+}
 
+function loadHistory() {
     var MSG_CUSTOMER = 24;
     var MSG_CUSTOMER_SUPPORT = 25;
 
@@ -369,6 +329,65 @@ $(document).ready(function () {
             console.log("get customer name err:", err, xhr.status);
         }
     });
+}
+
+var im = new IMService();
+im.observer = observer;
+
+$(document).ready(function () {
+    var r = util.getURLParameter('store', location.search);
+    if (r) {
+        storeID = parseInt(r);
+    }
+
+    r = util.getURLParameter('uid', location.search);
+    if (customerID) {
+        uid = customerID;
+    } else if (r) {
+        uid = parseInt(r);
+    }
+
+    r = util.getURLParameter('appid', location.search);
+    if (r) {
+        appID = parseInt(r);
+    } else if (customerAppID) {
+        appID = customerAppID;
+    }
+
+    token = "";
+    r = util.getURLParameter('token', location.search);
+    if (r) {
+        token = r;
+    } else if (customerToken) {
+        token = customerToken;
+    }
+    console.log("appid:", appID);
+    console.log("uid:", uid);
+    console.log("store id:", storeID);
+    console.log("token:" + token);
+
+
+    if (!token || !appID || !uid || !storeID) {
+        return;
+    }
+
+
+    $('#chat_button').on('click', function () {
+        sendMsg();
+    });
+
+
+    dom.entry.keypress(function (e) {
+        if (e.keyCode != 13) return;
+        e.stopPropagation();
+        e.preventDefault();
+        sendMsg()
+    });
+    dom.entry.on('touchstart', function () {
+        scrollDown();
+    });
+
+
 
     $('#chatHistory').on('click', '.image-thumb-body', function () {
         var _this = $(this);
@@ -393,4 +412,12 @@ $(document).ready(function () {
         return false
     });
 
+
+    if (host) {
+        im.host = host;
+    }
+    im.accessToken = token
+    im.start();
+    getSupporter();
+    loadHistory();
 });
