@@ -251,12 +251,21 @@ function getSupporter() {
     
 }
 
+function generateGUID() {
+    function s4() {
+        return Math.floor((1 + Math.random()) * 0x10000)
+                   .toString(16)
+                   .substring(1);
+    }
+    return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+           s4() + '-' + s4() + s4() + s4();
+}
 
 function sendMsg() {
     var msg = $("#entry").val().replace("\n", "");
     if (!util.isBlank(msg)) {
         var now = new Date();
-        var obj = {"text": msg};
+        var obj = {"text": msg, "uuid":generateGUID()};
         var textMsg = JSON.stringify(obj);
         var message = {
             customerID: uid,
