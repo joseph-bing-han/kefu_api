@@ -5,6 +5,8 @@ var appID = 0;
 var uid = 0;
 var token = "";
 
+var IMService = gobelieve.IMService;
+
 String.format = function () {
     if (arguments.length == 0)
         return null;
@@ -230,8 +232,8 @@ observer = {
     }
 };
 
-var im = new IMService(observer);
-
+var im = new IMService();
+im.observer = observer;
 
 $(document).ready(function () {
     var r = util.getURLParameter('store', location.search);

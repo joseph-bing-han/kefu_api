@@ -7,6 +7,8 @@ var customerAppID = 0;
 var msgLocalID = 1;
 var imDB = new IMDB();
 
+var IMService = gobelieve.IMService;
+
 var userDB = {
     users : new Array(),
     addUser : function(newUser) {
@@ -133,5 +135,6 @@ var observer = {
     }
 };
 
-var im = new IMService(observer);
+var im = new IMService();
+im.observer = observer;
 
