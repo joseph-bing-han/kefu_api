@@ -136,7 +136,7 @@ def chat_page():
     data = {
         "appid": int(appid),
         "customer_id": customer_id,
-        "user_name": user_name,
+        "name": user_name,
     }
     
     basic = base64.b64encode("%s:%s"%(appid, appkey))
