@@ -204,7 +204,7 @@ observer = {
         appendMessage(msg);
         if (!hideTip) { //非首次加载
             checkGoBottom();
-            window.localStorage.setItem('lastMsg', window.JSON.stringify(msg));
+            //     window.localStorage.setItem('lastMsg', window.JSON.stringify(msg));
         }
 
     },
@@ -407,12 +407,12 @@ $(document).ready(function () {
         $(this).remove();
     });
 
-    var lastMsg = window.localStorage.getItem('lastMsg');
-    if (lastMsg) {
-        lastMsg = window.JSON.parse(lastMsg);
-        alert(window.JSON.parse(lastMsg.content)['text']);
-        window.localStorage.setItem('lastMsg', '');
-    }
+    // var lastMsg = window.localStorage.getItem('lastMsg');
+    // if (lastMsg) {
+    // lastMsg = window.JSON.parse(lastMsg);
+    // alert(window.JSON.parse(lastMsg.content)['text']);
+    // window.localStorage.setItem('lastMsg', '');
+    // }
 
 
     $(window).on('unload', function () {
