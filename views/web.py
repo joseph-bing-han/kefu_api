@@ -127,7 +127,7 @@ def chat():
 def chat_page():
     appid = request.args.get('appid')
     appkey = request.args.get('appkey')
-    uid = request.args.get('uid', '')
+    customer_id = request.args.get('customer_id', '')
     app_name = request.args.get('app_name', '')
     user_name = request.args.get('user_name', '')
     if not appid or not appkey or not user_name:
@@ -135,7 +135,7 @@ def chat_page():
 
     data = {
         "appid": int(appid),
-        "uid": uid,
+        "customer_id": customer_id,
         "user_name": user_name,
     }
     
