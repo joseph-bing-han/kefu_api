@@ -129,7 +129,7 @@ def chat_page():
     appkey = request.args.get('appkey')
     customer_id = request.args.get('customer_id', '')
     app_name = request.args.get('app_name', '')
-    user_name = request.args.get('user_name', '')
+    user_name = request.args.get('name', '')
     if not appid or not appkey or not user_name:
         return render_template_string(error_html, error="appid、appkey、uid、user_name 为必填参数")
 
