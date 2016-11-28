@@ -63,7 +63,6 @@ var htmlLoyout = {
         return html.join('');
     },
     buildImage: function (msg) {
-        console.log('msg====', msg)
         var html = [];
         html.push('<li class="chat-item"  data-id="' + msg.id + '">');
         html.push('    <div class="message ' + msg.cls + '">');
@@ -248,24 +247,25 @@ function getSupporter() {
             console.log("get customer name err:", err, xhr.status);
         }
     });
-    
+
 }
 
 function generateGUID() {
     function s4() {
         return Math.floor((1 + Math.random()) * 0x10000)
-                   .toString(16)
-                   .substring(1);
+            .toString(16)
+            .substring(1);
     }
+
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-           s4() + '-' + s4() + s4() + s4();
+        s4() + '-' + s4() + s4() + s4();
 }
 
 function sendMsg() {
     var msg = $("#entry").val().replace("\n", "");
     if (!util.isBlank(msg)) {
         var now = new Date();
-        var obj = {"text": msg, "uuid":generateGUID()};
+        var obj = {"text": msg, "uuid": generateGUID()};
         var textMsg = JSON.stringify(obj);
         var message = {
             customerID: uid,
@@ -397,7 +397,6 @@ $(document).ready(function () {
     });
 
 
-
     $('#chatHistory').on('click', '.image-thumb-body', function () {
         var _this = $(this);
         var src = _this.attr('src');
@@ -429,4 +428,70 @@ $(document).ready(function () {
     im.start();
     getSupporter();
     loadHistory();
+});
+
+function getFileType(dataString) {
+    var matches = dataString.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
+    if (matches.length !== 3) {
+        return new Error('Invalid input string');
+    }
+    return matches[1];
+}
+var uploadImage = function (success, fail) {
+    var headers = {
+        "Authorization": "Bearer " + token,
+        "Content-Type": false
+    };
+    var file = document.getElementById('file').files[0];
+    if (window.FileReader) {
+
+        var reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = shipOff;
+        function shipOff(event) {
+            var result = event.target.result;
+            var fileName = document.getElementById('file').files[0].name;
+            $.post('/upload', {
+                data: result.split('data:image/png;base64,')[1],
+                name: fileName,
+                contentType: getFileType(result),
+                authorization: headers.Authorization
+            }, function (res) {
+                success(res.src_url);
+            });
+        }
+    }else{
+        alert('您的手机暂不支持H5上传图片!');
+    }
+};
+function sendImages() {
+    uploadImage(
+        (url) => {
+            var obj = {"image": url, "uuid": generateGUID()};
+            var now = new Date();
+            var textMsg = JSON.stringify(obj);
+            var message = {
+                customerID: uid,
+                customerAppID: appID,
+                storeID: storeID,
+                sellerID: sellerID,
+                content: textMsg,
+                contentObj: obj,
+                msgLocalID: msgLocalID++
+            };
+            message.outgoing = true;
+            message.timestamp = (now.getTime() / 1000);
+            if (im.connectState == IMService.STATE_CONNECTED) {
+                im.sendCustomerMessage(message);
+                appendMessage(message);
+            }
+            scrollDown();
+        },
+        function () {
+            console.log('error');
+        }
+    );
+}
+$("#file").change(function (e) {
+    sendImages()
 });

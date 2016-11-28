@@ -2,6 +2,7 @@
 import requests
 from flask import request, Blueprint, g, session, redirect
 from flask import render_template_string, render_template
+from flask import url_for
 from werkzeug.security import generate_password_hash, check_password_hash
 import flask
 import md5
@@ -138,8 +139,8 @@ def chat_page():
         "customer_id": customer_id,
         "name": user_name,
     }
-    
-    basic = base64.b64encode("%s:%s"%(appid, appkey))
+
+    basic = base64.b64encode("%s:%s" % (appid, appkey))
     headers = {'Content-Type': 'application/json; charset=UTF-8',
                'Authorization': 'Basic ' + basic}
     url = config.GOBELIEVE_URL + "/customer/register"
@@ -153,10 +154,23 @@ def chat_page():
     token = res['data']['token']
     print res['data']
 
-    return render_template("customer/chat.html", host=config.HOST, 
+    return render_template("customer/chat.html", host=config.HOST,
                            customerAppID=int(appid), customerID=int(client_id),
                            customerToken=token, store_id=store_id,
                            name=app_name, apiURL=config.APIURL)
+
+
+@app.route("/upload", methods=['POST'])
+def upload():
+    url = 'http://api.gobelieve.io/images'
+    # url = 'http://0.0.0.0:8001/images/upload'
+    data = request.form.get('data', '')
+    content_type = request.form.get('contentType', '')
+    authorization = request.form.get('authorization', '')
+    headers = {'Authorization': authorization, 'Content-Type': content_type}
+    response = requests.post(url, base64.b64decode(data), headers=headers)
+    print response.content
+    return make_response(200, json.loads(response.content))
 
 
 @app.route("/chat/pc/conversation.html")
