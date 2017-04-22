@@ -56,7 +56,11 @@ def TestCustomerName():
     url = URL + "/customers/%s/%s"%(7, 1)
     r = requests.get(url, headers=headers)
     print r.content
-    
+
+def TestCustomerApp():
+    url = URL + "/customers/%s"%(7, )
+    r = requests.get(url, headers=headers)
+    print r.content
 
 def TestUnregister():
     url = URL + "/auth/unregister"
@@ -102,7 +106,7 @@ def TestPush():
 
     print "unbind device token success:", r.content
 
-
+TestCustomerApp()
 TestUnregister()
 TestOnlineAndOffline()
 TestPush()
