@@ -86,7 +86,7 @@ def access_token():
     username = obj["username"]
     password = obj["password"]
 
-    platform = obj.get('platform')
+    platform = obj.get('platform', 0)
     device_id = obj.get('device_id', '')
 
     if not username or not password:
@@ -145,7 +145,14 @@ def access_token():
         "platform":obj.get("platform", 0)
     }
 
-    content = json.dumps({"login":obj})
+    PLATFORM_WEB = 3
+    PLATFORM_WIN32 = 4
+    PLATFORM_DARWIN = 5
+    PLATFORM_LINUX = 6
+    if platform >= 3:
+        content = json.dumps({"login_pc":obj})
+    else:
+        content = json.dumps({"login":obj})
     send_sys_message(uid, content, config.APP_ID, config.APP_SECRET)
 
     return make_json_response(tok, 200)
