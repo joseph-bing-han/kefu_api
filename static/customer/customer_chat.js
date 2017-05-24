@@ -359,7 +359,8 @@ $(document).ready(function () {
     r = util.getURLParameter('appid', location.search);
     if (r) {
         appID = parseInt(r);
-    } else if (customerAppID) {
+    }
+    if (customerAppID) {
         appID = customerAppID;
     }
 
