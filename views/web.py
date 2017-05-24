@@ -105,6 +105,7 @@ def chat():
     device_id = request.args.get('device_id', '')
     if not store and appid:
         store = App.get_store_id(g._db, int(appid))
+        print "store id:", store
         if not store:
             return render_template_string(error_html, error="非法的应用id")
         
@@ -118,17 +119,32 @@ def chat():
         name = ""
 
     if uid and appid and token:
-        return render_template("customer/chat.html", host=config.HOST, customerAppID=int(appid), customerID=int(uid),
-                               customerToken=token, name=name, apiURL=config.APIURL)
+        return render_template("customer/chat.html",
+                               host=config.HOST,
+                               customerAppID=int(appid),
+                               customerID=int(uid),
+                               customerToken=token,
+                               name=name,
+                               apiURL=config.APIURL,
+                               storeID=int(store))
 
     # 生成临时用户
     rds = g.rds
     key = "anonymous_id"
     uid = rds.incr(key)
     appid = config.ANONYMOUS_APP_ID
-    token = login_gobelieve(uid, username, config.ANONYMOUS_APP_ID, config.ANONYMOUS_APP_SECRET, device_id=device_id)
-    return render_template("customer/chat.html", host=config.HOST, customerAppID=appid, customerID=uid,
-                           customerToken=token, name=name, apiURL=config.APIURL)
+    token = login_gobelieve(uid, username,
+                            config.ANONYMOUS_APP_ID,
+                            config.ANONYMOUS_APP_SECRET,
+                            device_id=device_id)
+    return render_template("customer/chat.html",
+                           host=config.HOST,
+                           customerAppID=appid,
+                           customerID=uid,
+                           customerToken=token,
+                           name=name,
+                           apiURL=config.APIURL,
+                           storeID=int(store))
 
 
 @app.route("/chat/index.html")
