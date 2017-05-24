@@ -11,6 +11,7 @@ import base64
 import logging
 from models.seller import Seller
 from models.store import Store
+from models.app import App
 from libs.util import make_response
 
 from authorization import check_seller_password
@@ -102,8 +103,14 @@ def chat():
     token = request.args.get('token')
     username = request.args.get('name', '')
     device_id = request.args.get('device_id', '')
+    if not store and appid:
+        store = App.get_store_id(g._db, int(appid))
+        if not store:
+            return render_template_string(error_html, error="非法的应用id")
+        
     if not store:
         return render_template_string(error_html, error="未指定商店id")
+        
     s = Store.get_store(g._db, int(store))
     if s:
         name = s['name']
