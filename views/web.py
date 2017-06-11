@@ -119,7 +119,7 @@ def chat():
         name = ""
 
     if uid and appid and token:
-        return render_template("customer/chat.html",
+        return render_template("customer/pc_chat.html",
                                host=config.HOST,
                                customerAppID=int(appid),
                                customerID=int(uid),
@@ -138,7 +138,7 @@ def chat():
         appid = config.ANONYMOUS_APP_ID
         uid = int(co_uid)
         token = co_token
-        return render_template("customer/chat.html",
+        return render_template("customer/pc_chat.html",
                                host=config.HOST,
                                customerAppID=appid,
                                customerID=uid,
@@ -156,7 +156,7 @@ def chat():
                             config.ANONYMOUS_APP_ID,
                             config.ANONYMOUS_APP_SECRET,
                             device_id=device_id)
-    resp = flask.make_response(render_template("customer/chat.html",
+    resp = flask.make_response(render_template("customer/pc_chat.html",
                                                host=config.HOST,
                                                customerAppID=appid,
                                                customerID=uid,
