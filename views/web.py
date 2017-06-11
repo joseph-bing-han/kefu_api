@@ -128,6 +128,25 @@ def chat():
                                apiURL=config.APIURL,
                                storeID=int(store))
 
+
+    #check cookie
+    co_username = request.cookies.get('username', '')
+    co_uid = request.cookies.get('uid')
+    co_token = request.cookies.get('token')
+
+    if co_username == username and co_uid and co_token:
+        appid = config.ANONYMOUS_APP_ID
+        uid = int(co_uid)
+        token = co_token
+        return render_template("customer/chat.html",
+                               host=config.HOST,
+                               customerAppID=appid,
+                               customerID=uid,
+                               customerToken=token,
+                               name=name,
+                               apiURL=config.APIURL,
+                               storeID=int(store))
+    
     # 生成临时用户
     rds = g.rds
     key = "anonymous_id"
@@ -137,14 +156,19 @@ def chat():
                             config.ANONYMOUS_APP_ID,
                             config.ANONYMOUS_APP_SECRET,
                             device_id=device_id)
-    return render_template("customer/chat.html",
-                           host=config.HOST,
-                           customerAppID=appid,
-                           customerID=uid,
-                           customerToken=token,
-                           name=name,
-                           apiURL=config.APIURL,
-                           storeID=int(store))
+    resp = flask.make_response(render_template("customer/chat.html",
+                                               host=config.HOST,
+                                               customerAppID=appid,
+                                               customerID=uid,
+                                               customerToken=token,
+                                               name=name,
+                                               apiURL=config.APIURL,
+                                               storeID=int(store)))
+
+    resp.set_cookie('token', token)
+    resp.set_cookie('uid', str(uid))
+    resp.set_cookie('username', username)
+    return resp
 
 
 @app.route("/chat/index.html")
