@@ -170,7 +170,11 @@ def refresh_token():
     if not rt.load(g.rds, refresh_token):
         return INVALID_REFRESH_TOKEN()
 
-    access_token = login_gobelieve(int(rt.user_id), "", config.APP_ID, config.APP_SECRET)
+    seller = Seller.get_seller(db, rt.user_id)
+    if not seller:
+        return INVALID_REFRESH_TOKEN()
+    
+    access_token = login_gobelieve(int(rt.user_id), seller['name'], config.APP_ID, config.APP_SECRET)
         
     if not access_token:
         return CAN_NOT_GET_TOKEN()
